@@ -1,8 +1,10 @@
 package edu.guilford;
 
 import java.io.IOException;
+
 import javafx.fxml.FXML;
 
+// Main view controller
 public class PrimaryController {
 
     @FXML
