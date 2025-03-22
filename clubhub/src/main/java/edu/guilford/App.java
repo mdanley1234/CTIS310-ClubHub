@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
@@ -23,6 +24,12 @@ public class App extends Application {
 
         scene = new Scene(loadFXML("primary"), WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
+        stage.setTitle("ClubHub");
+
+        // Add ClubHub icon
+        Image icon = new Image(getClass().getResourceAsStream("/edu/guilford/ClubHubLogo.jpg"));
+        stage.getIcons().add(icon);
+
         stage.show();
     }
 

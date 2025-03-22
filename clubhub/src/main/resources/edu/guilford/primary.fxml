@@ -22,36 +22,58 @@
                </image>
             </ImageView>
             <ScrollPane fx:id="menuPane" fitToHeight="true" hbarPolicy="NEVER" prefWidth="100.0" style="-fx-border-color: black; -fx-border-width: 1 0 0 0; -fx-background-color: #F2F2F2;" VBox.vgrow="ALWAYS">
-
-               <!-- Dynamically add club side bar panels here -->
-
-            </ScrollPane>
+               <content>
+                  <VBox fx:id="menuGrid" prefWidth="150.0" />
+               </content></ScrollPane>
          </children>
       </VBox>
    </left>
    <center>
       <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane prefHeight="100.0" prefWidth="1129.0" style="-fx-background-color: white;" VBox.vgrow="NEVER">
+            <AnchorPane prefHeight="150.0" style="-fx-background-color: white;" VBox.vgrow="NEVER">
                <children>
-                  <Label contentDisplay="CENTER" layoutX="25.0" layoutY="18.0" text="Dashboard" textAlignment="CENTER" underline="true">
+                  <Label fx:id="headerLabel" contentDisplay="CENTER" layoutX="60.0" layoutY="43.0" text="Dashboard" textAlignment="CENTER" underline="true" AnchorPane.leftAnchor="60.0" AnchorPane.topAnchor="43.0">
                      <font>
                         <Font name="Modern No. 20" size="60.0" />
                      </font>
                   </Label>
+                  <AnchorPane layoutX="715.0" layoutY="13.0" prefHeight="125.0" prefWidth="400.0" style="-fx-background-color: #F2F2F2; -fx-background-radius: 10;" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="13.0">
+                     <children>
+                        <Label fx:id="studentNameLabel" layoutX="15.0" layoutY="48.0" text="Student Name: " AnchorPane.topAnchor="45.0">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="studentIDLabel" layoutX="15.0" layoutY="78.0" text="Student ID: " AnchorPane.topAnchor="75.0">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="schoolLabel" layoutX="14.0" layoutY="14.0" text="School:" AnchorPane.topAnchor="15.0">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                </children>
             </AnchorPane>
-            <GridPane style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-            </GridPane>
+            <ScrollPane hbarPolicy="NEVER" prefHeight="355.0" prefWidth="1129.0" VBox.vgrow="ALWAYS">
+               <content>
+                  <GridPane fx:id="mainGrid" prefWidth="1129.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                  </GridPane>
+               </content>
+            </ScrollPane>
          </children>
       </VBox>
    </center>
