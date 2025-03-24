@@ -2,6 +2,8 @@ package edu.guilford;
 
 import java.io.IOException;
 
+import edu.guilford.gui.controllers.MainSceneController;
+import edu.guilford.gui.elements.ContentPane;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,15 +16,35 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    private static final double WINDOW_HEIGHT = 720;
-    private static final double WINDOW_WIDTH = 1280;
+    // Set application dimensions
+    public static final double WINDOW_HEIGHT = 720;
+    public static final double WINDOW_WIDTH = 1280;
     
     private static Scene scene;
 
     @Override
     public void start(Stage stage) throws IOException {
 
-        scene = new Scene(loadFXML("primary"), WINDOW_WIDTH, WINDOW_HEIGHT);
+        // scene = new Scene(loadFXML("primary"), WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        // BorderPane bp = new BorderPane();
+        // bp = FXMLLoader.load(getClass().getResource("primary.fxml"));
+
+
+        // scene = new Scene(bp, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("fxml/mainStage.fxml"));
+        Parent root = loader.load();
+        MainSceneController mainStageController = loader.getController();
+
+        // ScrollPane contentPane = new ScrollPane();
+        // contentPane = FXMLLoader.load(getClass().getResource("contentPane.fxml"));
+        // mainStageController.addContentPane(contentPane);
+
+        ContentPane pane = new ContentPane();
+        mainStageController.addContentPane(pane);
+
+        scene = new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT);
         stage.setScene(scene);
         stage.setTitle("ClubHub");
 
