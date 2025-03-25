@@ -7,11 +7,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
 public class MenuPane extends Pane {
+
+    // MenuPane sizes
+    private static final double HEIGHT = 65;
+    private static final double WIDTH = 150;
+
+    // MenuPane attributes
     private MenuPaneController controller;
 
     public MenuPane() {
         super();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("menu_pane.fxml"));
+        this.setWidth(WIDTH);
+        this.setHeight(HEIGHT);
 
         try {
             Pane pane = loader.load();

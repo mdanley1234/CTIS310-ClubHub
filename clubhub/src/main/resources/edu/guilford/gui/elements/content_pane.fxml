@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:controller="edu.guilford.gui.controller.ContentPaneController" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="280.0" minWidth="-Infinity" prefHeight="280.0" prefWidth="500.0" style="-fx-border-radius: 10;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane fitToHeight="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="280.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.guilford.gui.controller.ContentPaneController">
    <content>
       <VBox prefWidth="500.0">
          <children>

@@ -10,7 +10,6 @@ import javafx.scene.Scene;
 public class MainScene extends Scene {
     private static MainSceneController controller;
 
-
     public MainScene(double WINDOW_WIDTH, double WINDOW_HEIGHT) throws IOException {
         super(loadRoot(), WINDOW_WIDTH, WINDOW_HEIGHT); // Call super first
     }
