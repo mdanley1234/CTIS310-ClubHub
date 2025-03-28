@@ -11,10 +11,10 @@ import javafx.stage.Stage;
 public class GUIManager {
 
     // Attribute objects
-    private Stage stage;                // The stage
-    private LoginScene loginScene;      // Login scene
-    private SignupScene signupScene;    // Signup scene
-    private MainScene mainScene;        // Main scene
+    private static Stage stage;                // The stage
+    private static LoginScene loginScene;      // Login scene
+    private static SignupScene signupScene;    // Signup scene
+    private static MainScene mainScene;        // Main scene
 
     public GUIManager(Stage stage, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
         this.stage = stage;
@@ -27,8 +27,8 @@ public class GUIManager {
             e.printStackTrace();
         }
 
-        // Set the stage
-        stage.setScene(mainScene);
+        // Set the stage TODO: CHANGE TO LOGIN SCENE
+        loadMainScene();
 
         // Finish setting up GUI stage object
         stage.setTitle("ClubHub");
@@ -36,5 +36,17 @@ public class GUIManager {
         stage.getIcons().add(icon);
         stage.show();
     }
-    
+
+    // Static methods to load scenes
+    public static void loadLoginScene() {
+        stage.setScene(loginScene);
+    }
+
+    public static void loadSignupScene() {
+        stage.setScene(signupScene);
+    }
+
+    public static void loadMainScene() {
+        stage.setScene(mainScene);
+    }
 }

@@ -1,6 +1,7 @@
 package edu.guilford.gui.controllers;
 
 import edu.guilford.gui.elements.ContentPane;
+import edu.guilford.gui.elements.MenuPane;
 import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -35,6 +36,10 @@ public class MainSceneController {
             nextCol = 0;
             nextRow++;
         }
+    }
+
+    public void addMenuPane(MenuPane pane) {
+        menuGrid.getChildren().add(pane);
     }
 
     // // Method to add containers to the menuGrid (VBox)
