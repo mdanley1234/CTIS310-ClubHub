@@ -20,4 +20,13 @@ public class MainScene extends Scene {
         controller = loader.getController();
         return root;
     }
+
+    // GUI Methods
+    // public void loadContent(ArrayList<ContentPane> contentPanes) {
+    //     controller.re
+
+    //     for (ContentPane pane : contentPanes) {
+            
+    //     }
+    // }
 }
