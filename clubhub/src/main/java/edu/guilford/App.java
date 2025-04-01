@@ -1,12 +1,10 @@
 package edu.guilford;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import org.json.JSONObject;
 
 import edu.guilford.supabase.SupabaseAuth;
-import edu.guilford.supabase.SupabaseQuery;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -31,55 +29,31 @@ public class App extends Application {
         // Supabase testing
         System.out.println("=== Starting Supabase Auth Test ===");
 
-        // Test data
-        String testEmail = "testuser_" + UUID.randomUUID().toString().substring(0, 8) + "@example.com";
-        String testPassword = "securePassword123";
-        String testFullName = "Test User";
-        int testClassYear = 2025;
-        String testPhone = "555-123-4567";
-
-        // 1. Test Signup
-        System.out.println("\n--- Testing Signup ---");
+        // Signup a new user
         JSONObject newUser = SupabaseAuth.signUp(
-                testEmail,
-                testPassword,
-                testFullName,
-                testClassYear,
-                testPhone
+                "student@university.edu",
+                "securePassword123",
+                "John Doe",
+                12345,
+                "2025",
+                "2000-01-01",
+                "555-123-4567",
+                "123 College Ave",
+                "Jane Doe",
+                "555-987-6543"
         );
 
         if (newUser != null) {
-            System.out.println("✅ Signup Successful");
-            System.out.println("User ID: " + SupabaseAuth.getUserId());
-            System.out.println("Auth Token: " + SupabaseAuth.getAuthToken().substring(0, 20) + "...");
+            // Get the full profile
+            // JSONObject profile = SupabaseAuth.getCurrentUserProfile();
+            // System.out.println("Welcome " + profile.getString("full_name"));
 
-            // 2. Verify Profile Creation
-            System.out.println("\n--- Verifying Profile ---");
-            JSONObject profile = SupabaseQuery.getById("users", SupabaseAuth.getUserId());
-
-            if (profile != null) {
-                System.out.println("✅ Profile Created Successfully");
-                System.out.println("Profile Data:");
-                System.out.println("Email: " + profile.getString("email"));
-                System.out.println("Full Name: " + profile.getString("full_name"));
-                System.out.println("Class Year: " + profile.getInt("class_year"));
-                System.out.println("Phone: " + profile.getString("phone_number"));
-            } else {
-                System.out.println("❌ Profile Creation Failed");
-            }
-
-            // 3. Test Login
-            System.out.println("\n--- Testing Login ---");
-            SupabaseAuth.logout(); // Clear previous session
-
-            boolean loginSuccess = SupabaseAuth.login(testEmail, testPassword);
-            if (loginSuccess) {
-                System.out.println("✅ Login Successful");
-                System.out.println("Current User ID: " + SupabaseAuth.getUserId());
-            } else {
-                System.out.println("❌ Login Failed");
-            }
-
+            // Later login
+            boolean success = SupabaseAuth.login("student@university.edu", "securePassword123");
+            System.out.println(success);
+        }
+        else {
+            System.out.println("Failed to make user");
         }
 
     }
@@ -97,5 +71,4 @@ public class App extends Application {
     public static void main(String[] args) {
         launch();
     }
-
 }

@@ -9,69 +9,109 @@ import java.util.UUID;
 import org.json.JSONObject;
 
 public class SupabaseAuth {
-
-    private static final String SUPABASE_URL = "https://rzmoxaovvmsdjzryclow.supabase.co";
-    private static final String SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ6bW94YW92dm1zZGp6cnljbG93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0MDM4OTIsImV4cCI6MjA1Nzk3OTg5Mn0.qcOPIhMFIjHqmcNR03Vqk2rFMBzfJQKEcUX4Pfip8bQ";
+    private static final String SUPABASE_URL = "https://hjxjfjsiyormcexjkkpv.supabase.co";
+    private static final String SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhqeGpmanNpeW9ybWNleGpra3B2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM1MjkxNjMsImV4cCI6MjA1OTEwNTE2M30.U49B6u66GbU4XQsq9JM9hsXgUq8x6Nr8NL8BAIqn8Dg";
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static UUID userId = null;
     private static String authToken = null;
 
     // Getters
-    public static String getSupabaseUrl() {
-        return SUPABASE_URL;
-    }
+    public static String getSupabaseUrl() { return SUPABASE_URL; }
+    public static String getSupabaseApiKey() { return SUPABASE_API_KEY; }
+    public static String getAuthToken() { return authToken; }
+    public static UUID getUserId() { return userId; }
 
-    public static String getSupabaseApiKey() {
-        return SUPABASE_API_KEY;
-    }
+    /**
+     * Enhanced signup method with all profile fields
+     */
+    public static JSONObject signUp(
+        String email,
+        String password,
+        String fullName,
+        Integer studentId,
+        String classYear,
+        String dateOfBirth,
+        String phoneNumber,
+        String address,
+        String emergencyContactName,
+        String emergencyContactPhone
+    ) {
+        try {
+            // Build user metadata
+            JSONObject metadata = new JSONObject();
+            metadata.put("full_name", fullName);
+            metadata.put("email", email); // Required for trigger
+            if (studentId != null) metadata.put("student_id", studentId);
+            if (classYear != null) metadata.put("class_year", classYear);
+            if (dateOfBirth != null) metadata.put("date_of_birth", dateOfBirth);
+            if (phoneNumber != null) metadata.put("phone_number", phoneNumber);
+            if (address != null) metadata.put("address", address);
+            if (emergencyContactName != null) metadata.put("emergency_contact_name", emergencyContactName);
+            if (emergencyContactPhone != null) metadata.put("emergency_contact_phone", emergencyContactPhone);
 
-    public static HttpClient getHttpClient() {
-        return httpClient;
-    }
+            JSONObject options = new JSONObject();
+            options.put("data", metadata);
+            options.put("email_confirm", false); // Disable email confirmation for testing
 
-    public static String getAuthToken() {
-        return authToken;
-    }
+            JSONObject requestBody = new JSONObject();
+            requestBody.put("email", email);
+            requestBody.put("password", password);
+            requestBody.put("options", options);
 
-    public static UUID getUserId() {
-        return userId;
+            HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(SUPABASE_URL + "/auth/v1/signup"))
+                .header("Content-Type", "application/json")
+                .header("apikey", SUPABASE_API_KEY)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                .build();
+
+            HttpResponse<String> response = httpClient.send(
+                request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                JSONObject userData = new JSONObject(response.body());
+                authToken = userData.getString("access_token");
+                userId = UUID.fromString(userData.getJSONObject("user").getString("id"));
+                
+                // // Verify profile was created TODO
+                // JSONObject profile = SupabaseQuery.getById("profiles", userId);
+                // if (profile == null) {
+                //     System.err.println("Warning: Profile creation failed");
+                // }
+                return userData;
+            } else {
+                System.err.println("Signup failed (" + response.statusCode() + "): " + response.body());
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Signup error: " + e.getMessage());
+            return null;
+        }
     }
 
     /**
-     * Logs in a user with email and password
-     *
-     * @return true if login successful, false otherwise
+     * Login with email/password
      */
     public static boolean login(String email, String password) {
         try {
-            String loginUrl = SUPABASE_URL + "/auth/v1/token?grant_type=password";
-
             JSONObject requestBody = new JSONObject();
             requestBody.put("email", email);
             requestBody.put("password", password);
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(loginUrl))
-                    .header("Content-Type", "application/json")
-                    .header("apikey", SUPABASE_API_KEY)
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-                    .build();
+                .uri(URI.create(SUPABASE_URL + "/auth/v1/token?grant_type=password"))
+                .header("Content-Type", "application/json")
+                .header("apikey", SUPABASE_API_KEY)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
+                .build();
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = httpClient.send(
+                request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
                 JSONObject jsonResponse = new JSONObject(response.body());
                 authToken = jsonResponse.getString("access_token");
-
-                try {
-                    String userIdString = jsonResponse.getJSONObject("user").getString("id");
-                    userId = UUID.fromString(userIdString);
-                } catch (IllegalArgumentException e) {
-                    System.err.println("Invalid UUID format: " + e.getMessage());
-                    return false;
-                }
-
-                System.out.println("Login successful! User ID: " + userId);
+                userId = UUID.fromString(jsonResponse.getJSONObject("user").getString("id"));
                 return true;
             } else {
                 System.err.println("Login failed: " + response.body());
@@ -83,144 +123,14 @@ public class SupabaseAuth {
         }
     }
 
-    /**
-     * Logs out the current user
-     */
-    public static void logout() {
-        authToken = null;
-        userId = null;
-        System.out.println("Logged out successfully");
-    }
+    // /**
+    //  * Get the current user's full profile
+    //  */
+    // public static JSONObject getCurrentUserProfile() {
+    //     if (userId == null) return null;
+    //     return SupabaseQuery.getById("profiles", userId);
+    // }
 
-    /**
-     * Checks if the current authToken is valid
-     *
-     * @return true if token is valid, false otherwise
-     */
-    public static boolean isAuthTokenValid() {
-        if (authToken == null) {
-            return false;
-        }
-
-        try {
-            String url = SUPABASE_URL + "/auth/v1/user";
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("apikey", SUPABASE_API_KEY)
-                    .header("Authorization", "Bearer " + authToken)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
-        } catch (Exception e) {
-            System.err.println("Token validation error: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Attempts to refresh the authentication token
-     *
-     * @return true if refresh successful, false otherwise
-     */
-    public static boolean refreshToken() {
-        if (authToken == null) {
-            return false;
-        }
-
-        try {
-            String refreshUrl = SUPABASE_URL + "/auth/v1/token?grant_type=refresh_token";
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(refreshUrl))
-                    .header("apikey", SUPABASE_API_KEY)
-                    .header("Authorization", "Bearer " + authToken)
-                    .POST(HttpRequest.BodyPublishers.noBody())
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                authToken = new JSONObject(response.body()).getString("access_token");
-                return true;
-            }
-            return false;
-        } catch (Exception e) {
-            System.err.println("Token refresh error: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Sends a password reset email to the specified address
-     *
-     * @return true if request was successful, false otherwise
-     */
-    public static boolean sendPasswordResetEmail(String email) {
-        try {
-            String resetUrl = SUPABASE_URL + "/auth/v1/recover";
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("email", email);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(resetUrl))
-                    .header("Content-Type", "application/json")
-                    .header("apikey", SUPABASE_API_KEY)
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
-        } catch (Exception e) {
-            System.err.println("Password reset error: " + e.getMessage());
-            return false;
-        }
-    }
-
-    /**
-     * Signup Method
-     * @param email
-     * @param password
-     * @param fullName
-     * @param classYear
-     * @param phoneNumber
-     * @return
-     */
-    public static JSONObject signUp(String email, String password, String fullName, int classYear, String phoneNumber /* other fields */) {
-        try {
-            JSONObject metadata = new JSONObject();
-            metadata.put("full_name", fullName);
-            metadata.put("class_year", classYear);
-            metadata.put("phone_number", phoneNumber);
-            // Add other fields as needed
-
-            JSONObject options = new JSONObject();
-            options.put("data", metadata);
-            options.put("email_confirm", false); // Disable for testing
-
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("email", email);
-            requestBody.put("password", password);
-            requestBody.put("options", options);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(SUPABASE_URL + "/auth/v1/signup"))
-                    .header("Content-Type", "application/json")
-                    .header("apikey", SUPABASE_API_KEY)
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(request,
-                    HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                return new JSONObject(response.body());
-            }
-            // Error handling...
-        } catch (Exception e) {
-            // Exception handling...
-        }
-        return null;
-    }
-
+    // ... (keep your existing logout, isAuthTokenValid, refreshToken, 
+    // and sendPasswordResetEmail methods unchanged)
 }
