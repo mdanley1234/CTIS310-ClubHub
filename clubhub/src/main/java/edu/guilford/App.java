@@ -2,9 +2,7 @@ package edu.guilford;
 
 import java.io.IOException;
 
-import org.json.JSONObject;
-
-import edu.guilford.supabase.SupabaseAuth;
+import edu.guilford.data.ProfilePacket;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,32 +27,18 @@ public class App extends Application {
         // Supabase testing
         System.out.println("=== Starting Supabase Auth Test ===");
 
-        // Signup a new user
-        JSONObject newUser = SupabaseAuth.signUp(
-                "student@university.edu",
-                "securePassword123",
-                "John Doe",
-                12345,
-                "2025",
-                "2000-01-01",
-                "555-123-4567",
-                "123 College Ave",
-                "Jane Doe",
-                "555-987-6543"
+        ProfilePacket testPacket = new ProfilePacket(
+            "test@example.com",
+            123456,
+            "John",
+            "Doe",
+            "01192007",
+            2024,
+            "336-345-9256",
+            "123 Test Street, Test City, TS 12345"
         );
 
-        if (newUser != null) {
-            // Get the full profile
-            // JSONObject profile = SupabaseAuth.getCurrentUserProfile();
-            // System.out.println("Welcome " + profile.getString("full_name"));
-
-            // Later login
-            boolean success = SupabaseAuth.login("student@university.edu", "securePassword123");
-            System.out.println(success);
-        }
-        else {
-            System.out.println("Failed to make user");
-        }
+        System.out.println("ProfilePacket created: " + testPacket);
 
     }
 
