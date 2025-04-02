@@ -1,5 +1,6 @@
 package edu.guilford.supabase;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.net.http.HttpClient;
@@ -9,66 +10,41 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * SupabaseQuery handles all query services of the SB database
+ */
 public class SupabaseQuery {
 
     // Reuse the HTTP client and base URL from SupabaseAuth
     private static final HttpClient httpClient = SupabaseAuth.getHttpClient();
     private static final String BASE_URL = SupabaseAuth.getSupabaseUrl() + "/rest/v1/";
 
-    private SupabaseQuery() {
-    } // Prevent instantiation
-
-    /**
-     * Executes a SELECT query with filters
-     *
-     * @param table The table name to query
-     * @param filters Optional filters (e.g., "name=eq.John")
-     * @param select Optional select columns (e.g., "id,name,age")
-     * @return JSONArray of results or null if error
-     */
-    public static JSONArray select(String table, String filters, String select) {
-        try {
-            String url = buildSelectUrl(table, filters, select);
-
-            HttpRequest request = buildAuthorizedRequest(url)
-                    .GET()
-                    .build();
-
-            HttpResponse<String> response = httpClient.send(
-                    request, HttpResponse.BodyHandlers.ofString());
-
-            if (response.statusCode() == 200) {
-                return new JSONArray(response.body());
-            } else {
-                System.err.println("Query failed: " + response.body());
-                return null;
-            }
-        } catch (Exception e) {
-            System.err.println("Query error: " + e.getMessage());
-            return null;
-        }
-    }
-
     /**
      * Gets a single record by ID
      *
-     * @param table The table name
-     * @param id The record ID
-     * @return JSONObject or null if not found/error
+     * @param table Table name
+     * @param search_field Search field
+     * @param search_key UUID key to search for in the search_field in the table
+     * @return Updated record as JSONObject or null if failed
      */
-    public static JSONObject getById(String table, UUID id) {
+    public static JSONObject queryById(String table, String search_field, UUID search_key) {
         try {
-            String url = BASE_URL + table + "?profile_id=eq." + id;
+            // Construct query url
+            String url = BASE_URL + table + "?" + search_field + "=eq." + search_key;
 
+            // Build HttpRequest object
             HttpRequest request = buildAuthorizedRequest(url)
                     .GET()
                     .build();
 
+            // Fire request and store response
             HttpResponse<String> response = httpClient.send(
                     request, HttpResponse.BodyHandlers.ofString());
 
+            // Data handling
             if (response.statusCode() == 200) {
                 JSONArray results = new JSONArray(response.body());
                 return results.length() > 0 ? results.getJSONObject(0) : null;
@@ -76,8 +52,44 @@ public class SupabaseQuery {
                 System.err.println("Get by ID failed: " + response.body());
                 return null;
             }
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException | JSONException e) {
             System.err.println("Get by ID error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Executes a SELECT query with optional filters and select (multiple rows
+     * returned)
+     *
+     * @param table The table name to query
+     * @param filters Optional filters (e.g., "name=eq.John")
+     * @param select Optional select columns (e.g., "id,name,age")
+     * @return JSONArray of results or null if error
+     */
+    public static JSONArray queryMany(String table, String filters, String select) {
+        try {
+            // Build url
+            String url = buildSelectUrl(table, filters, select);
+
+            // Build HttpRequest object
+            HttpRequest request = buildAuthorizedRequest(url)
+                    .GET()
+                    .build();
+
+            // Fire request and store response
+            HttpResponse<String> response = httpClient.send(
+                    request, HttpResponse.BodyHandlers.ofString());
+
+            // Data handling
+            if (response.statusCode() == 200) {
+                return new JSONArray(response.body());
+            } else {
+                System.err.println("Query failed: " + response.body());
+                return null;
+            }
+        } catch (IOException | InterruptedException | JSONException e) {
+            System.err.println("Query error: " + e.getMessage());
             return null;
         }
     }

@@ -134,7 +134,7 @@ public class SupabaseAuth {
                 userId = UUID.fromString(jsonResponse.getJSONObject("user").getString("id"));
 
                 // Query profile information for ProfilePacket
-                JSONObject data = SupabaseQuery.getById("profiles", userId);
+                JSONObject data = SupabaseQuery.queryById("profiles", "profile_id", userId);
                 profilePacket.setEmail((String) data.get("email"));
                 profilePacket.setStudent_id((int) data.get("student_id"));
                 profilePacket.setFirst_name((String) data.get("first_name"));
