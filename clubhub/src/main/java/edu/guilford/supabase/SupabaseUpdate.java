@@ -10,27 +10,35 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class SupabaseUpdate {
+
     private static final HttpClient httpClient = SupabaseAuth.getHttpClient();
     private static final String BASE_URL = SupabaseAuth.getSupabaseUrl() + "/rest/v1/";
 
     /**
      * Updates a single record by ID
+     *
      * @param table Table name
-     * @param id Record ID to update
+     * @param search_field Search field
+     * @param search_key UUID key to search for in the search_field in the table
      * @param data JSONObject containing fields to update
      * @return Updated record as JSONObject or null if failed
      */
-    public static JSONObject updateById(String table, UUID id, JSONObject data) {
+    public static JSONObject updateById(
+            String table,
+            String search_field,
+            UUID search_key,
+            JSONObject data) {
+
         try {
-            String url = BASE_URL + table + "?id=eq." + id;
-            
+            String url = BASE_URL + table + "?" + search_field + "=eq." + search_key;
+
             HttpRequest request = buildAuthorizedRequest(url)
-                .method("PATCH", HttpRequest.BodyPublishers.ofString(data.toString()))
-                .header("Prefer", "return=representation") // Return the updated record
-                .build();
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString(data.toString()))
+                    .header("Prefer", "return=representation") // Return the updated record
+                    .build();
 
             HttpResponse<String> response = httpClient.send(
-                request, HttpResponse.BodyHandlers.ofString());
+                    request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
                 JSONArray result = new JSONArray(response.body());
@@ -47,6 +55,7 @@ public class SupabaseUpdate {
 
     /**
      * Updates multiple records matching filters
+     *
      * @param table Table name
      * @param filters Supabase filter string (e.g., "status=eq.active")
      * @param data JSONObject containing fields to update
@@ -55,14 +64,14 @@ public class SupabaseUpdate {
     public static JSONArray updateMany(String table, String filters, JSONObject data) {
         try {
             String url = BASE_URL + table + "?" + filters;
-            
+
             HttpRequest request = buildAuthorizedRequest(url)
-                .method("PATCH", HttpRequest.BodyPublishers.ofString(data.toString()))
-                .header("Prefer", "return=representation")
-                .build();
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString(data.toString()))
+                    .header("Prefer", "return=representation")
+                    .build();
 
             HttpResponse<String> response = httpClient.send(
-                request, HttpResponse.BodyHandlers.ofString());
+                    request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == 200) {
                 return new JSONArray(response.body());
@@ -78,16 +87,17 @@ public class SupabaseUpdate {
 
     private static HttpRequest.Builder buildAuthorizedRequest(String url) {
         return HttpRequest.newBuilder()
-            .uri(URI.create(url))
-            .header("apikey", SupabaseAuth.getSupabaseApiKey())
-            .header("Authorization", "Bearer " + SupabaseAuth.getAuthToken())
-            .header("Content-Type", "application/json");
+                .uri(URI.create(url))
+                .header("apikey", SupabaseAuth.getSupabaseApiKey())
+                .header("Authorization", "Bearer " + SupabaseAuth.getAuthToken())
+                .header("Content-Type", "application/json");
     }
 
     /**
      * Fluent builder for update operations
      */
     public static class Builder {
+
         private final String table;
         private final JSONObject data = new JSONObject();
         private final StringBuilder filters = new StringBuilder();
@@ -119,19 +129,20 @@ public class SupabaseUpdate {
 
         /**
          * Executes the update operation
+         *
          * @return Updated records or null if failed
          */
         public JSONArray execute() {
             try {
                 String url = BASE_URL + table + "?" + filters.toString();
-                
+
                 HttpRequest request = buildAuthorizedRequest(url)
-                    .method("PATCH", HttpRequest.BodyPublishers.ofString(data.toString()))
-                    .header("Prefer", "return=representation")
-                    .build();
+                        .method("PATCH", HttpRequest.BodyPublishers.ofString(data.toString()))
+                        .header("Prefer", "return=representation")
+                        .build();
 
                 HttpResponse<String> response = httpClient.send(
-                    request, HttpResponse.BodyHandlers.ofString());
+                        request, HttpResponse.BodyHandlers.ofString());
 
                 if (response.statusCode() == 200) {
                     return new JSONArray(response.body());

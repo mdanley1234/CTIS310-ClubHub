@@ -52,6 +52,35 @@ public class ProfilePacket {
         return json;
     }
 
+    @Override
+    public String toString() {
+        return "ProfilePacket{" +
+                "email='" + email + '\'' +
+                ", student_id=" + student_id +
+                ", first_name='" + first_name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", date_of_birth='" + date_of_birth + '\'' +
+                ", graduation_year=" + graduation_year +
+                ", phone_number='" + phone_number + '\'' +
+                ", address='" + address + '\'' +
+                '}';
+    }
+
+    /**
+     * @return true if all fields are defined, false otherwise
+     */
+    public boolean isComplete() {
+        return email != null &&
+            student_id != 0 &&
+            first_name != null &&
+            last_name != null &&
+            date_of_birth != null &&
+            graduation_year != 0 &&
+            phone_number != null &&
+            address != null;
+    }
+
+    // Getters
     public String getEmail() {
         return email;
     }

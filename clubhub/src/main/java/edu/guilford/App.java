@@ -3,6 +3,7 @@ package edu.guilford;
 import java.io.IOException;
 
 import edu.guilford.data.ProfilePacket;
+import edu.guilford.supabase.SupabaseAuth;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,17 +29,19 @@ public class App extends Application {
         System.out.println("=== Starting Supabase Auth Test ===");
 
         ProfilePacket testPacket = new ProfilePacket(
-            "test@example.com",
-            123456,
-            "John",
-            "Doe",
-            "01192007",
-            2024,
-            "336-345-9256",
-            "123 Test Street, Test City, TS 12345"
+            "test11@example.com"
+            // 123456,
+            // "John",
+            // "Doe",
+            // "01192007",
+            // 2024,
+            // "336-345-9256",
+            // "123 Test Street, Test City, TS 12345"
         );
 
-        System.out.println("ProfilePacket created: " + testPacket);
+        System.out.println(SupabaseAuth.login(testPacket, "12345678"));
+
+        System.out.println("ProfilePacket fetched: " + testPacket);
 
     }
 
