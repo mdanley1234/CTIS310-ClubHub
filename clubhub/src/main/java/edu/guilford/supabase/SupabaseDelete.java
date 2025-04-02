@@ -1,144 +1,161 @@
-// package edu.guilford.supabase;
+package edu.guilford.supabase;
 
-// import java.net.URI;
-// import java.net.http.HttpClient;
-// import java.net.http.HttpRequest;
-// import java.net.http.HttpResponse;
-// import java.util.UUID;
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.UUID;
 
-// public class SupabaseDelete {
-//     private static final HttpClient httpClient = SupabaseAuth.getHttpClient();
-//     private static final String BASE_URL = SupabaseAuth.getSupabaseUrl() + "/rest/v1/";
+/**
+ * SupabaseDelete handles all delete services of the SB database
+ */
+public class SupabaseDelete {
 
-//     private SupabaseDelete() {} // Prevent instantiation
+    // Reuse the HTTP client and base URL from SupabaseAuth
+    private static final HttpClient httpClient = SupabaseAuth.getHttpClient();
+    private static final String BASE_URL = SupabaseAuth.getSupabaseUrl() + "/rest/v1/";
 
-//     /**
-//      * Deletes a record by ID
-//      * @param table Table name
-//      * @param id Record ID to delete
-//      * @return true if successful, false otherwise
-//      */
-//     public static boolean deleteById(String table, UUID id) {
-//         try {
-//             String url = BASE_URL + table + "?id=eq." + id;
-            
-//             HttpRequest request = buildAuthorizedRequest(url)
-//                 .DELETE()
-//                 .build();
+    /**
+     * Deletes a single record by ID
+     *
+     * @param table Table name
+     * @param search_field Search field
+     * @param search_key UUID key to search for in the search_field in the table
+     * @return True if delete is successful, false otherwise
+     */
+    public static boolean deleteById(String table, String search_field, UUID search_key) {
+        try {
+            // Construct query url
+            String url = BASE_URL + table + "?" + search_field + "=eq." + search_key;
 
-//             HttpResponse<String> response = httpClient.send(
-//                 request, HttpResponse.BodyHandlers.ofString());
+            // Build HttpRequest Object
+            HttpRequest request = buildAuthorizedRequest(url)
+                    .DELETE()
+                    .build();
 
-//             if (response.statusCode() == 204) {
-//                 System.out.println("Successfully deleted record");
-//                 return true;
-//             } else {
-//                 System.err.println("Delete failed: " + response.body());
-//                 return false;
-//             }
-//         } catch (Exception e) {
-//             System.err.println("Delete error: " + e.getMessage());
-//             return false;
-//         }
-//     }
+            // Fire request and store response
+            HttpResponse<String> response = httpClient.send(
+                    request, HttpResponse.BodyHandlers.ofString());
 
-//     /**
-//      * Deletes multiple records matching filters
-//      * @param table Table name
-//      * @param filters Supabase filter string (e.g., "status=eq.inactive")
-//      * @return Number of deleted records or -1 if error
-//      */
-//     public static int deleteMany(String table, String filters) {
-//         try {
-//             String url = BASE_URL + table + "?" + filters;
-            
-//             HttpRequest request = buildAuthorizedRequest(url)
-//                 .DELETE()
-//                 .build();
+            // Data handling
+            if (response.statusCode() == 204) {
+                System.out.println("Successfully deleted record");
+                return true;
+            } else {
+                System.err.println("Delete failed: " + response.body());
+                return false;
+            }
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Delete error: " + e.getMessage());
+            return false;
+        }
+    }
 
-//             HttpResponse<String> response = httpClient.send(
-//                 request, HttpResponse.BodyHandlers.ofString());
+    /**
+     * Deletes multiple records matching filters
+     *
+     * @param table Table name
+     * @param filters Supabase filter string (e.g., "status=eq.inactive")
+     * @return Number of deleted records or -1 if error
+     */
+    public static int deleteMany(String table, String filters) {
+        try {
+            // Construct url
+            String url = BASE_URL + table + "?" + filters;
 
-//             if (response.statusCode() == 204) {
-//                 // Supabase returns count in Content-Range header
-//                 String contentRange = response.headers().firstValue("Content-Range").orElse("0");
-//                 return Integer.parseInt(contentRange.split("/")[1]);
-//             } else {
-//                 System.err.println("Delete failed: " + response.body());
-//                 return -1;
-//             }
-//         } catch (Exception e) {
-//             System.err.println("Delete error: " + e.getMessage());
-//             return -1;
-//         }
-//     }
+            // Build HttpRequest Object
+            HttpRequest request = buildAuthorizedRequest(url)
+                    .DELETE()
+                    .build();
 
-//     /**
-//      * Creates a base authorized request builder
-//      */
-//     private static HttpRequest.Builder buildAuthorizedRequest(String url) {
-//         return HttpRequest.newBuilder()
-//             .uri(URI.create(url))
-//             .header("apikey", SupabaseAuth.getSupabaseApiKey())
-//             .header("Authorization", "Bearer " + SupabaseAuth.getAuthToken())
-//             .header("Content-Type", "application/json");
-//     }
+            // Fire request and store response
+            HttpResponse<String> response = httpClient.send(
+                    request, HttpResponse.BodyHandlers.ofString());
 
-//     /**
-//      * Fluent builder for complex delete operations
-//      */
-//     public static class Builder {
-//         private final StringBuilder url;
-//         private boolean firstParam = true;
+            // Data handling
+            if (response.statusCode() == 204) {
+                // Supabase returns count in Content-Range header
+                String contentRange = response.headers().firstValue("Content-Range").orElse("0");
+                return Integer.parseInt(contentRange.split("/")[1]);
+            } else {
+                System.err.println("Delete failed: " + response.body());
+                return -1;
+            }
+        } catch (IOException | InterruptedException | NumberFormatException e) {
+            System.err.println("Delete error: " + e.getMessage());
+            return -1;
+        }
+    }
 
-//         public Builder(String table) {
-//             this.url = new StringBuilder(BASE_URL).append(table);
-//         }
+    /**
+     * Creates a base authorized request builder
+     */
+    private static HttpRequest.Builder buildAuthorizedRequest(String url) {
+        return HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("apikey", SupabaseAuth.getSupabaseApiKey())
+                .header("Authorization", "Bearer " + SupabaseAuth.getAuthToken())
+                .header("Content-Type", "application/json");
+    }
 
-//         public Builder eq(String column, Object value) {
-//             addParam(column + "=eq." + value);
-//             return this;
-//         }
+    /**
+     * Fluent builder for complex delete operations
+     */
+    public static class Builder {
 
-//         public Builder gt(String column, Object value) {
-//             addParam(column + "=gt." + value);
-//             return this;
-//         }
+        private final StringBuilder url;
+        private boolean firstParam = true;
 
-//         public Builder lt(String column, Object value) {
-//             addParam(column + "=lt." + value);
-//             return this;
-//         }
+        public Builder(String table) {
+            this.url = new StringBuilder(BASE_URL).append(table);
+        }
 
-//         private void addParam(String param) {
-//             url.append(firstParam ? "?" : "&").append(param);
-//             firstParam = false;
-//         }
+        public Builder eq(String column, Object value) {
+            addParam(column + "=eq." + value);
+            return this;
+        }
 
-//         /**
-//          * Executes the delete operation
-//          * @return Number of deleted records or -1 if error
-//          */
-//         public int execute() {
-//             try {
-//                 HttpRequest request = buildAuthorizedRequest(url.toString())
-//                     .DELETE()
-//                     .build();
+        public Builder gt(String column, Object value) {
+            addParam(column + "=gt." + value);
+            return this;
+        }
 
-//                 HttpResponse<String> response = httpClient.send(
-//                     request, HttpResponse.BodyHandlers.ofString());
+        public Builder lt(String column, Object value) {
+            addParam(column + "=lt." + value);
+            return this;
+        }
 
-//                 if (response.statusCode() == 204) {
-//                     String contentRange = response.headers().firstValue("Content-Range").orElse("0");
-//                     return Integer.parseInt(contentRange.split("/")[1]);
-//                 } else {
-//                     System.err.println("Delete failed: " + response.body());
-//                     return -1;
-//                 }
-//             } catch (Exception e) {
-//                 System.err.println("Delete error: " + e.getMessage());
-//                 return -1;
-//             }
-//         }
-//     }
-// }
+        private void addParam(String param) {
+            url.append(firstParam ? "?" : "&").append(param);
+            firstParam = false;
+        }
+
+        /**
+         * Executes the delete operation
+         *
+         * @return Number of deleted records or -1 if error
+         */
+        public int execute() {
+            try {
+                HttpRequest request = buildAuthorizedRequest(url.toString())
+                        .DELETE()
+                        .build();
+
+                HttpResponse<String> response = httpClient.send(
+                        request, HttpResponse.BodyHandlers.ofString());
+
+                if (response.statusCode() == 204) {
+                    String contentRange = response.headers().firstValue("Content-Range").orElse("0");
+                    return Integer.parseInt(contentRange.split("/")[1]);
+                } else {
+                    System.err.println("Delete failed: " + response.body());
+                    return -1;
+                }
+            } catch (Exception e) {
+                System.err.println("Delete error: " + e.getMessage());
+                return -1;
+            }
+        }
+    }
+}
