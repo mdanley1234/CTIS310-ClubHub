@@ -194,7 +194,7 @@ public class SupabaseInsert {
                     System.err.println("Insert failed: " + response.body());
                     return null;
                 }
-            } catch (Exception e) {
+            } catch (IOException | InterruptedException | JSONException e) {
                 System.err.println("Insert error: " + e.getMessage());
                 return null;
             }
