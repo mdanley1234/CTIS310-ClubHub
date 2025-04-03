@@ -20,15 +20,15 @@ public class GUIManager {
         this.stage = stage;
 
         try {
-            // loginScene = new LoginScene(WINDOW_WIDTH, WINDOW_HEIGHT);
-            // signupScene = new SignupScene(WINDOW_WIDTH, WINDOW_HEIGHT);
+            loginScene = new LoginScene(WINDOW_WIDTH, WINDOW_HEIGHT);
+            signupScene = new SignupScene(WINDOW_WIDTH, WINDOW_HEIGHT);
             mainScene = new MainScene(WINDOW_WIDTH, WINDOW_HEIGHT);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // Set the stage TODO: CHANGE TO LOGIN SCENE
-        loadMainScene();
+        loadLoginScene();
 
         // Finish setting up GUI stage object
         stage.setTitle("ClubHub");

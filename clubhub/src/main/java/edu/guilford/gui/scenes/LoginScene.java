@@ -15,7 +15,7 @@ public class LoginScene extends Scene {
     }
 
     private static Parent loadRoot() throws IOException {
-        FXMLLoader loader = new FXMLLoader(MainScene.class.getResource("login_scene.fxml"));
+        FXMLLoader loader = new FXMLLoader(LoginScene.class.getResource("login_scene.fxml"));
         Parent root = loader.load();
         controller = loader.getController();
         return root;
