@@ -8,6 +8,9 @@ import edu.guilford.gui.scenes.SignupScene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * The GUI Manager builds all GUI functionality.
+ */
 public class GUIManager {
 
     // Attribute objects
@@ -17,7 +20,7 @@ public class GUIManager {
     private static MainScene mainScene;        // Main scene
 
     public GUIManager(Stage stage, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
-        this.stage = stage;
+        GUIManager.stage = stage;
 
         // Build 3 app scenes
         try {

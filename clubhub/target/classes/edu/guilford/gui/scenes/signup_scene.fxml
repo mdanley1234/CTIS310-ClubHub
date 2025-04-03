@@ -45,56 +45,56 @@
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="emailField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Student ID">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="studentIdField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="First Name">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="firstNameField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Last Name">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="lastNameField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Date of Birth">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="dateOfBirthField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Graduation Year">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="graduationYearField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Phone Number">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="phoneNumberField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Address">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <TextField prefWidth="300.0" />
+                  <TextField fx:id="addressField" prefWidth="300.0" />
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
                      <font>
                         <Font name="Bodoni MT" size="30.0" />
                      </font>
                   </Text>
-                  <PasswordField prefWidth="300.0" />
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FF7F7F;" text="SIGN UP">
+                  <PasswordField fx:id="passwordField" prefWidth="300.0" />
+                  <Button mnemonicParsing="false" onAction="#handleSignup" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FF7F7F;" text="SIGN UP">
                      <font>
                         <Font name="Bodoni MT Bold" size="20.0" />
                      </font>
@@ -107,9 +107,14 @@
                         <Font name="Bodoni MT Bold" size="14.0" />
                      </font>
                      <VBox.margin>
-                        <Insets top="15.0" />
+                        <Insets top="10.0" />
                      </VBox.margin>
                   </Button>
+                  <Text fx:id="failMessage" fill="RED" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Signup was unsuccessful. Please check all fields and try again.">
+                     <font>
+                        <Font name="Bell MT" size="14.0" />
+                     </font>
+                  </Text>
                </children>
                <padding>
                   <Insets bottom="50.0" top="50.0" />

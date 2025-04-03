@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public class SignupScene extends Scene {
+    
     private static SignupSceneController controller;
 
     public SignupScene(double WINDOW_WIDTH, double WINDOW_HEIGHT) throws IOException {

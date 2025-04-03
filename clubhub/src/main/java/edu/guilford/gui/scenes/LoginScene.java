@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public class LoginScene extends Scene {
+
     private static LoginSceneController controller;
 
     public LoginScene(double WINDOW_WIDTH, double WINDOW_HEIGHT) throws IOException {
@@ -20,5 +21,4 @@ public class LoginScene extends Scene {
         controller = loader.getController();
         return root;
     }
-
 }
