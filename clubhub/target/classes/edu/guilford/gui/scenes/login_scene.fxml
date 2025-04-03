@@ -57,7 +57,7 @@
                   <Insets top="45.0" />
                </VBox.margin>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FF7F7F;" text="SIGN UP">
+            <Button mnemonicParsing="false" onAction="#switchToSignup" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: #FF7F7F;" text="SIGN UP">
                <font>
                   <Font name="Bodoni MT Bold" size="20.0" />
                </font>

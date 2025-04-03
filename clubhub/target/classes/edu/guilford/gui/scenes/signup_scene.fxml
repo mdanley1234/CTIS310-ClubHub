@@ -102,7 +102,7 @@
                         <Insets top="45.0" />
                      </VBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: orange;" text="Return to Login">
+                  <Button mnemonicParsing="false" onAction="#switchToLogin" prefHeight="50.0" prefWidth="150.0" style="-fx-background-color: orange;" text="Return to Login">
                      <font>
                         <Font name="Bodoni MT Bold" size="14.0" />
                      </font>

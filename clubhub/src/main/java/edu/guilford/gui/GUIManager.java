@@ -19,6 +19,7 @@ public class GUIManager {
     public GUIManager(Stage stage, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
         this.stage = stage;
 
+        // Build 3 app scenes
         try {
             loginScene = new LoginScene(WINDOW_WIDTH, WINDOW_HEIGHT);
             signupScene = new SignupScene(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -27,7 +28,7 @@ public class GUIManager {
             e.printStackTrace();
         }
 
-        // Set the stage TODO: CHANGE TO LOGIN SCENE
+        // Load login scene
         loadLoginScene();
 
         // Finish setting up GUI stage object
