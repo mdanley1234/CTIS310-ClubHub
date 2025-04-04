@@ -51,7 +51,11 @@ public class LoginSceneController {
         
         if (SupabaseAuth.login(loginPacket, passwordField.getText())) {
             // Successful login
+
+            // Populate global data
             DataManager.setProfilePacket(loginPacket);
+            DataManager.buildClubList();
+
             GUIManager.loadMainScene();
         } else {
             failMessage.setOpacity(1);

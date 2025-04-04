@@ -2,6 +2,13 @@ package edu.guilford.data;
 
 import org.json.JSONObject;
 
+/**
+ * ProfilePacket.java
+ * Represents a user's profile information in the application.
+ * This class is used for both sign-up and login operations.
+ * It contains various attributes related to the user's profile.
+ * To populate the ProfilePacket during login, pass in SubabaseAuth.login()
+ */
 public class ProfilePacket {
 
     // Profile attributes
@@ -80,7 +87,7 @@ public class ProfilePacket {
             address != null;
     }
 
-    // Getters
+    // Getters and Setters
     public String getEmail() {
         return email;
     }

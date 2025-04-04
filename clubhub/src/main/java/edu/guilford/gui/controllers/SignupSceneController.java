@@ -107,6 +107,7 @@ public class SignupSceneController {
                 if (SupabaseAuth.login(signupPacket, passwordField.getText())) {
                     // Successful signup and login
                     DataManager.setProfilePacket(signupPacket);
+                    DataManager.buildClubList();
                     GUIManager.loadMainScene();
                 } else {
                     failMessage.setOpacity(1);

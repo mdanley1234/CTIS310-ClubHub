@@ -2,19 +2,17 @@ package edu.guilford;
 
 import java.io.IOException;
 
-import edu.guilford.data.ProfilePacket;
 import edu.guilford.gui.GUIManager;
-import edu.guilford.supabase.SupabaseAuth;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
+ 
 /**
  * JavaFX App
  */
-public class App extends Application {
+public class Launcher extends Application {
 
     // Set application dimensions
     public static final double WINDOW_HEIGHT = 720;
@@ -29,18 +27,18 @@ public class App extends Application {
         // // Supabase testing
         // System.out.println("=== Starting Supabase Auth Test ===");
 
-        ProfilePacket testPacket = new ProfilePacket(
-            "test5@example.com",
-            123456,
-            "John",
-            "Doe",
-            "01192007",
-            2024,
-            "336-345-9256",
-            "123 Test Street, Test City, TS 12345"
-        );
+        // ProfilePacket testPacket = new ProfilePacket(
+        //     "test5@example.com",
+        //     123456,
+        //     "John",
+        //     "Doe",
+        //     "01192007",
+        //     2024,
+        //     "336-345-9256",
+        //     "123 Test Street, Test City, TS 12345"
+        // );
 
-        SupabaseAuth.signUp(testPacket, "12345678");
+        // SupabaseAuth.signUp(testPacket, "12345678");
         // System.out.println(SupabaseAuth.login(testPacket, "12345678"));
 
         // // System.out.println("ProfilePacket fetched: " + testPacket);
@@ -57,7 +55,7 @@ public class App extends Application {
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
 
     }
