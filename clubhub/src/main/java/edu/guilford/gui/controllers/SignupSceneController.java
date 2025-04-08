@@ -1,9 +1,14 @@
 package edu.guilford.gui.controllers;
 
 import java.io.IOException;
+import java.util.UUID;
 
+import edu.guilford.data.DataManager;
+import edu.guilford.data.packets.BundlePacket;
 import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.gui.GUIManager;
+import edu.guilford.supabase.SupabaseAuth;
+import edu.guilford.supabase.SupabaseQuery;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -108,6 +113,22 @@ public class SignupSceneController {
                 // Login attempt (If signup is successful)
                 if (profilePacket.login(passwordField.getText())) {
                     // SUCCESSFUL SIGNUP AND LOGIN
+
+                    // Generate REQUIRED bundles and information
+
+                    // Dashboard bundle
+                    UUID dashboard_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Dashboard").getString("club_id"));
+                    BundlePacket dashboardPacket = new BundlePacket(SupabaseAuth.getUserId(), dashboard_id, "member");
+                    dashboardPacket.insertPacket("bundles");
+
+                    // Directory bundle
+                    UUID directory_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Directory").getString("club_id"));
+                    BundlePacket directoryPacket = new BundlePacket(SupabaseAuth.getUserId(), directory_id, "member");
+                    directoryPacket.insertPacket("bundles");
+
+                    // Reload DataManager
+                    DataManager.initDataManager(SupabaseAuth.getUserId());
+
                     GUIManager.loadMainScene();
                 } else {
                     // UNSUCCESSFUL LOGIN

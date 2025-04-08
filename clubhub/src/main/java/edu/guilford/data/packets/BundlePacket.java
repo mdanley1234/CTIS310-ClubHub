@@ -10,7 +10,7 @@ public class BundlePacket extends DataPacket {
             String role) {
         this.put("profile_id", profile_id);
         this.put("club_id", club_id);
-        this.put("user_role", role);
+        this.put("role", role);
     }
 
     // bundlePacket SB constructor

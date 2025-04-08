@@ -29,10 +29,10 @@ public class SupabaseQuery {
      *
      * @param table Table name
      * @param search_field Search field
-     * @param search_key UUID key to search for in the search_field in the table
+     * @param search_key The key to search for in the search_field in the table
      * @return Updated record as JSONObject or null if failed
      */
-    public static JSONObject queryById(String table, String search_field, UUID search_key) {
+    public static JSONObject queryById(String table, String search_field, String search_key) {
         try {
             // Construct query url
             String url = BASE_URL + table + "?" + search_field + "=eq." + search_key;
@@ -58,6 +58,11 @@ public class SupabaseQuery {
             System.err.println("Get by ID error: " + e.getMessage());
             return null;
         }
+    }
+
+    // Overloaded method for UUID search_key
+    public static JSONObject queryById(String table, String search_field, UUID search_key) {
+        return queryById(table, search_field, search_key.toString());
     }
 
     /**
