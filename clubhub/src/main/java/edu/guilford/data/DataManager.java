@@ -1,10 +1,12 @@
 package edu.guilford.data;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
+import edu.guilford.data.packets.ClubPacket;
+import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.supabase.SupabaseQuery;
 
 /**
@@ -22,49 +24,17 @@ public class DataManager {
     // The static clubPackets variable is populated when a user logs in or signs up (all clubs)
     private static ArrayList<ClubPacket> clubPackets;
 
-    // Populate clubPackets with all clubs (user associations are stored in bundles)
-    public static void buildClubList() {
+    public static void initDataManager(UUID profile_id) {
+        profilePacket = new ProfilePacket(profile_id);
+
         clubPackets = new ArrayList<>();
 
-        JSONArray clubArray = SupabaseQuery.queryMany("clubs", "", "");
-
-        for (int i = 0; i < clubArray.length(); i++) {
-            JSONObject clubObject = clubArray.getJSONObject(i);
-            ClubPacket clubPacket = new ClubPacket(
-                clubObject.getString("club_name"),
-                clubObject.getInt("founding_year"),
-                clubObject.getString("club_description"),
-                clubObject.getString("club_website"),
-                clubObject.getString("meeting_schedule"),
-                clubObject.getString("meeting_location"),
-                clubObject.getString("club_email"),
-                clubObject.getBoolean("active")
-            );
-            clubPackets.add(clubPacket);
+        JSONArray idArray = SupabaseQuery.queryMany("clubs", "", "club_id");
+        for (int i = 0; i < idArray.length(); i++) {
+            clubPackets.add(new ClubPacket(UUID.fromString(idArray.getJSONObject(i).getString("club_id"))));
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-    // Getters and setters
-
-    public static ProfilePacket getProfilePacket() {
-        return profilePacket;
-    }
-
-    public static void setProfilePacket(ProfilePacket profilePacket) {
-        DataManager.profilePacket = profilePacket;
-    }
 
 
 

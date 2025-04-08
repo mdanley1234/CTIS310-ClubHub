@@ -10,7 +10,8 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.guilford.data.ProfilePacket;
+import edu.guilford.data.DataManager;
+import edu.guilford.data.packets.ProfilePacket;
 
 /**
  * SupabaseAuth handles all authentication services and contains authentication
@@ -49,22 +50,17 @@ public class SupabaseAuth {
     /**
      * Signs up a new user using profilePacket information and password
      *
-     * @param profilePacket Contains all user profile personal information
+     * @param userData Contains all user profile personal information
      * (isComplete() != false)
      * @param password Password for the new user
      * @return True if signUp was successful, false otherwise
      */
     public static boolean signUp(ProfilePacket profilePacket, String password) {
 
-        // Check if all fields in profilePacket are defined
-        if (!profilePacket.isComplete()) {
-            return false;
-        }
-
         try {
             // Build signUp request JSONObject
             JSONObject requestBody = new JSONObject();
-            requestBody.put("email", profilePacket.getEmail());
+            requestBody.put("email", profilePacket.get("email"));
             requestBody.put("password", password);
 
             // Build signUp request HttpRequest Object
@@ -85,8 +81,8 @@ public class SupabaseAuth {
                 authToken = userData.getString("access_token");
                 userId = UUID.fromString(userData.getJSONObject("user").getString("id"));
 
-                // Update profile information
-                SupabaseUpdate.updateById("profiles", "profile_id", userId, profilePacket.getJSON());
+                // Update SB profile information with userPacket data
+                profilePacket.updatePacket("profiles", "profile_id", userId);
 
                 return true; // SUCCESSFUL SIGNUP
             } else {
@@ -100,19 +96,19 @@ public class SupabaseAuth {
     }
 
     /**
-     * Logins a user using only email from profilePacket and populating
-     * profilePacket with information if successful
+     * Logins a user using only email from profilePacket and initializing DataManager
+     * if successful. This pulls profile and club data from SB.
      *
      * @param profilePacket Profile packet to be popluated containing login
      * email definition
      * @param password User password
      * @return True if login was successful. false if not.
      */
-    public static boolean login(ProfilePacket profilePacket, String password) {
+    public static boolean login(JSONObject userPacket, String password) {
         try {
             // Build JSONObject request
             JSONObject requestBody = new JSONObject();
-            requestBody.put("email", profilePacket.getEmail());
+            requestBody.put("email", userPacket.get("email"));
             requestBody.put("password", password);
 
             // Build HttpRequest object
@@ -133,16 +129,8 @@ public class SupabaseAuth {
                 authToken = jsonResponse.getString("access_token");
                 userId = UUID.fromString(jsonResponse.getJSONObject("user").getString("id"));
 
-                // Query profile information for ProfilePacket
-                JSONObject data = SupabaseQuery.queryById("profiles", "profile_id", userId);
-                profilePacket.setEmail((String) data.get("email"));
-                profilePacket.setStudent_id((int) data.get("student_id"));
-                profilePacket.setFirst_name((String) data.get("first_name"));
-                profilePacket.setLast_name((String) data.get("last_name"));
-                profilePacket.setDate_of_birth((String) data.get("date_of_birth"));
-                profilePacket.setGraduation_year((int) data.get("graduation_year"));
-                profilePacket.setPhone_number((String) data.get("phone_number"));
-                profilePacket.setAddress((String) data.get("address"));
+                // Init DataManager with profile_id
+                DataManager.initDataManager(userId);
 
                 return true;    // SUCCESSFUL LOGIN
             } else {

@@ -2,10 +2,8 @@ package edu.guilford.gui.controllers;
 
 import java.io.IOException;
 
-import edu.guilford.data.DataManager;
-import edu.guilford.data.ProfilePacket;
+import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.gui.GUIManager;
-import edu.guilford.supabase.SupabaseAuth;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -49,13 +47,8 @@ public class LoginSceneController {
     private void handleLogin() throws IOException {
         ProfilePacket loginPacket = new ProfilePacket(emailField.getText());
         
-        if (SupabaseAuth.login(loginPacket, passwordField.getText())) {
-            // Successful login
-
-            // Populate global data
-            DataManager.setProfilePacket(loginPacket);
-            DataManager.buildClubList();
-
+        if (loginPacket.login(passwordField.getText())) {
+            // SUCCESSFUL LOGIN
             GUIManager.loadMainScene();
         } else {
             failMessage.setOpacity(1);

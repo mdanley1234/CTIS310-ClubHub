@@ -2,10 +2,8 @@ package edu.guilford.gui.controllers;
 
 import java.io.IOException;
 
-import edu.guilford.data.DataManager;
-import edu.guilford.data.ProfilePacket;
+import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.gui.GUIManager;
-import edu.guilford.supabase.SupabaseAuth;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -91,23 +89,23 @@ public class SignupSceneController {
             return;
         }
 
-        try {
-            ProfilePacket signupPacket = new ProfilePacket(
-                emailField.getText(),
-                Integer.parseInt(studentIdField.getText()), // Convert to int
-                firstNameField.getText(),
-                lastNameField.getText(),
-                dateOfBirthField.getText(),
-                Integer.parseInt(graduationYearField.getText()), // Convert to int
-                phoneNumberField.getText(),
-                addressField.getText()
-            );
+        // Build profilePacket
+        ProfilePacket profilePacket = new ProfilePacket(
+            emailField.getText(),
+            Integer.parseInt(studentIdField.getText()), // Convert to int
+            firstNameField.getText(),
+            lastNameField.getText(),
+            dateOfBirthField.getText(),
+            Integer.parseInt(graduationYearField.getText()), // Convert to int
+            phoneNumberField.getText(),
+            addressField.getText()
+        );
 
-            if (SupabaseAuth.signUp(signupPacket, passwordField.getText())) {
-                if (SupabaseAuth.login(signupPacket, passwordField.getText())) {
+        // Attempt to signup, login, and init DataManager (implicitly in login method)
+        try {
+            if (profilePacket.signUp(passwordField.getText())) {
+                if (profilePacket.login(passwordField.getText())) {
                     // Successful signup and login
-                    DataManager.setProfilePacket(signupPacket);
-                    DataManager.buildClubList();
                     GUIManager.loadMainScene();
                 } else {
                     failMessage.setOpacity(1);
