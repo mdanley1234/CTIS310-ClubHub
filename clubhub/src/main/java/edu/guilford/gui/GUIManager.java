@@ -51,6 +51,7 @@ public class GUIManager {
     }
 
     public static void loadMainScene() {
+        mainScene.buildScene(); // Build the main scene
         stage.setScene(mainScene);
     }
 }

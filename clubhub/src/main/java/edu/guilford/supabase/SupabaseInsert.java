@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 /**
  * SupabaseInsert handles all insert services of the SB database
+ * - insertOne: Inserts a single record
+ * - insertMany: Inserts multiple records in a single request
+ * - upsertOne: Inserts or updates a record if it already exists
  */
 public class SupabaseInsert {
 

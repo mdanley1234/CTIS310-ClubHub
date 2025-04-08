@@ -9,6 +9,8 @@ import java.util.UUID;
 
 /**
  * SupabaseDelete handles all delete services of the SB database
+ * - deleteById: Deletes a single record by ID
+ * - deleteMany: Deletes multiple records matching filters
  */
 public class SupabaseDelete {
 

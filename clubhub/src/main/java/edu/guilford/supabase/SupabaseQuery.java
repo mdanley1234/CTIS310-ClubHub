@@ -15,6 +15,8 @@ import org.json.JSONObject;
 
 /**
  * SupabaseQuery handles all query services of the SB database
+ * - queryById: Gets a single record by ID
+ * - queryMany: Executes a SELECT query with optional filters and select (multiple rows returned)
  */
 public class SupabaseQuery {
 

@@ -45,12 +45,15 @@ public class LoginSceneController {
      */
     @FXML
     private void handleLogin() throws IOException {
+        // Build login packet
         ProfilePacket loginPacket = new ProfilePacket(emailField.getText());
         
+        // Attempt login
         if (loginPacket.login(passwordField.getText())) {
             // SUCCESSFUL LOGIN
             GUIManager.loadMainScene();
         } else {
+            // UNSUCCESSFUL LOGIN
             failMessage.setOpacity(1);
         }
     }

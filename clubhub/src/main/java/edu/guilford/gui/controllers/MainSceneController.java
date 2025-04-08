@@ -3,6 +3,7 @@ package edu.guilford.gui.controllers;
 import edu.guilford.gui.elements.ContentPane;
 import edu.guilford.gui.elements.MenuPane;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -17,11 +18,23 @@ public class MainSceneController {
     @FXML
     private VBox menuGrid;
 
-    // // Switch to the secondary view (existing method)
-    // @FXML
-    // private void switchToSecondary() throws IOException {
-    //     App.setRoot("secondary");
-    // }
+    // Profile Information
+
+    @FXML
+    private Label schoolLabel;
+
+    @FXML
+    private Label studentNameLabel;
+
+    @FXML
+    private Label studentIDLabel;
+
+    // Set Header Labels
+    public void setHeaderLabels(String school, String studentName, String studentID) {
+        schoolLabel.setText("School:  " + school);
+        studentNameLabel.setText("Student Name:  " + studentName);
+        studentIDLabel.setText("Student ID:  " + studentID);
+    }
 
     // Method to add containers to the mainGrid (GridPane) automatically at the next location
     private int nextRow = 0;

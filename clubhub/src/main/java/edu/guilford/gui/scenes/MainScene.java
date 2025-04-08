@@ -2,6 +2,8 @@ package edu.guilford.gui.scenes;
 
 import java.io.IOException;
 
+import edu.guilford.data.DataManager;
+import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.gui.controllers.MainSceneController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -22,12 +24,10 @@ public class MainScene extends Scene {
         return root;
     }
 
-    // GUI Methods
-    // public void loadContent(ArrayList<ContentPane> contentPanes) {
-    //     controller.re
-
-    //     for (ContentPane pane : contentPanes) {
-            
-    //     }
-    // }
+    // Construct the Main Scene after login
+    public void buildScene() {
+        // Add profile information header
+        ProfilePacket profile = DataManager.getProfilePacket();
+        controller.setHeaderLabels("Early College at Guilford", (String) profile.get("first_name") + " " + (String) profile.get("last_name"), String.valueOf(profile.get("student_id")));
+    }
 }

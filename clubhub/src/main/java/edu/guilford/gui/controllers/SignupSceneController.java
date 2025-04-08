@@ -89,7 +89,7 @@ public class SignupSceneController {
             return;
         }
 
-        // Build profilePacket
+        // Build signup packet
         ProfilePacket profilePacket = new ProfilePacket(
             emailField.getText(),
             Integer.parseInt(studentIdField.getText()), // Convert to int
@@ -101,23 +101,27 @@ public class SignupSceneController {
             addressField.getText()
         );
 
-        // Attempt to signup, login, and init DataManager (implicitly in login method)
+        // Attempt to signup and login
         try {
+            // Signup attempt
             if (profilePacket.signUp(passwordField.getText())) {
+                // Login attempt (If signup is successful)
                 if (profilePacket.login(passwordField.getText())) {
-                    // Successful signup and login
+                    // SUCCESSFUL SIGNUP AND LOGIN
                     GUIManager.loadMainScene();
                 } else {
+                    // UNSUCCESSFUL LOGIN
                     failMessage.setOpacity(1);
-                    failMessage.setText("Signup attempt was unsuccessful.");
+                    failMessage.setText("Signup attempt was successful, but login failed.");
                 }
             } else {
+                // UNSUCCESSFUL SIGNUP
                 failMessage.setOpacity(1);
                 failMessage.setText("Signup attempt was unsuccessful.");
             }
         } catch (NumberFormatException e) {
-            failMessage.setText("Invalid input for Student ID or Graduation Year.");
             failMessage.setOpacity(1);
+            failMessage.setText("Invalid input for Student ID or Graduation Year.");
         }
     }
 }

@@ -13,6 +13,8 @@ import org.json.JSONObject;
 
 /**
  * SupabaseUpdate handles all update services of the SB database
+ * - updateById: Updates a single record by ID
+ * - updateMany: Updates multiple records matching filters
  */
 public class SupabaseUpdate {
 

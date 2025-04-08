@@ -10,7 +10,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
  
 /**
- * JavaFX App
+ * JavaFX App Launcher
  */
 public class Launcher extends Application {
 
@@ -32,7 +32,6 @@ public class Launcher extends Application {
     private static Parent loadFXML(String fxml) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Launcher.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
-
     }
 
     public static void main(String[] args) {

@@ -14,8 +14,9 @@ import edu.guilford.data.DataManager;
 import edu.guilford.data.packets.ProfilePacket;
 
 /**
- * SupabaseAuth handles all authentication services and contains authentication
- * tokens, UUIDs, and "secure" SB URL & API keys
+ * SupabaseAuth handles all authentication services and contains authentication tokens, UUIDs, and "secure" SB URL & API keys
+ * - signUp: Signs up a new user
+ * - login: Logs in an existing user
  */
 public class SupabaseAuth {
 
