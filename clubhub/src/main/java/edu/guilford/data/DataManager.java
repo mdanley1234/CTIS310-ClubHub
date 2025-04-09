@@ -28,6 +28,9 @@ public class DataManager {
     // The static bundlePackets variable is populated when a user logs in or signs up (all bundles for the user)
     private static ArrayList<BundlePacket> bundlePackets;
 
+    // The static dataBundle variable is populated when a user logs in or signs up (all dataBundles for the user)
+    private static ArrayList<DataBundle> dataBundles;
+
     // Fetch the profilePacket for the logged-in user, clubPackets for all clubs, and bundlePackets for all bundles for the user
     public static void initDataManager(UUID profile_id) {
         // profilePacket is populated
@@ -45,6 +48,13 @@ public class DataManager {
         JSONArray bundleArray = SupabaseQuery.queryMany("bundles", "profile_id=eq." + SupabaseAuth.getUserId(), "bundle_id");
         for (int i = 0; i < bundleArray.length(); i++) {
             bundlePackets.add(new BundlePacket(UUID.fromString(bundleArray.getJSONObject(i).getString("bundle_id"))));
+        }
+
+        // Construct all dataBundles for the logged-in user
+        dataBundles = new ArrayList<>();
+        for (BundlePacket bundlePacket : bundlePackets) {
+            DataBundle dataBundle = new DataBundle(bundlePacket);
+            dataBundles.add(dataBundle);
         }
 
         // TODO: TESTING
