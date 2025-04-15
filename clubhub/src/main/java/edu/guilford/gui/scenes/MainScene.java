@@ -35,7 +35,17 @@ public class MainScene extends Scene {
 
         // Add menu panels
         for (DataBundle bundle : DataManager.getDataBundles()) {
-            controller.addMenuPane(new MenuPane(bundle.getClubName()));
+            controller.addMenuPane(new MenuPane(bundle));
         }
+
+        // Select bundle
+        // currentBundle = DataManager.getDataBundles().get(1); // CLUB BUNDLE
+    }
+
+    public void loadBundle(DataBundle bundle) {
+        currentBundle = bundle;
+
+        // Construct ContentPanes
+
     }
 }

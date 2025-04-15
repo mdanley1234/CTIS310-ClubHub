@@ -2,6 +2,7 @@ package edu.guilford.data.packets;
 
 import java.util.UUID;
 
+@Deprecated
 public class ClubPacket extends DataPacket {
 
     // Signup Constructor

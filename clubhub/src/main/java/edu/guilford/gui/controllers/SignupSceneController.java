@@ -3,7 +3,7 @@ package edu.guilford.gui.controllers;
 import java.io.IOException;
 import java.util.UUID;
 
-import edu.guilford.data.packets.BundlePacket;
+import edu.guilford.data.packets.DataPacket;
 import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.gui.GUIManager;
 import edu.guilford.supabase.SupabaseAuth;
@@ -117,12 +117,22 @@ public class SignupSceneController {
 
                     // Dashboard bundle
                     UUID dashboard_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Dashboard").getString("club_id"));
-                    BundlePacket dashboardPacket = new BundlePacket(SupabaseAuth.getUserId(), dashboard_id, "member");
+
+                    DataPacket dashboardPacket = new DataPacket();
+                    dashboardPacket.put("profile_id", SupabaseAuth.getUserId());
+                    dashboardPacket.put("club_id", dashboard_id);
+                    dashboardPacket.put("role", "member");
+
                     dashboardPacket.insertPacket("bundles");
 
                     // Directory bundle
                     UUID directory_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Directory").getString("club_id"));
-                    BundlePacket directoryPacket = new BundlePacket(SupabaseAuth.getUserId(), directory_id, "member");
+
+                    DataPacket directoryPacket = new DataPacket();
+                    directoryPacket.put("profile_id", SupabaseAuth.getUserId());
+                    directoryPacket.put("club_id", directory_id);
+                    directoryPacket.put("role", "member");
+
                     directoryPacket.insertPacket("bundles");
 
                     GUIManager.loadMainScene();

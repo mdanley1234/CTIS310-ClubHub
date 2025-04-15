@@ -1,11 +1,9 @@
 package edu.guilford.data;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 import org.json.JSONArray;
 
-import edu.guilford.data.packets.ClubPacket;
 import edu.guilford.data.packets.DataPacket;
 import edu.guilford.supabase.SupabaseQuery;
 
@@ -48,7 +46,7 @@ public class DataBundle {
 
             JSONArray idArray = SupabaseQuery.queryMany("clubs", "", "club_id");
             for (int i = 0; i < idArray.length(); i++) {
-                dataPackets.add(new ClubPacket(UUID.fromString(idArray.getJSONObject(i).getString("club_id"))));
+                dataPackets.add(new DataPacket("clubs", "club_id", idArray.getJSONObject(i).getString("club_id")));
             }
 
             return dataPackets;
