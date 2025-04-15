@@ -22,6 +22,8 @@ public class Launcher extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        // Launch application GUI
         GUIManager guiManager = new GUIManager(stage, WINDOW_WIDTH, WINDOW_HEIGHT);
     }
 

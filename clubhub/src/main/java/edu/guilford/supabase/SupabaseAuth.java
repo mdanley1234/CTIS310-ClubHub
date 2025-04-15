@@ -10,7 +10,6 @@ import java.util.UUID;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import edu.guilford.data.DataManager;
 import edu.guilford.data.packets.ProfilePacket;
 
 /**
@@ -52,7 +51,6 @@ public class SupabaseAuth {
      * Signs up a new user using profilePacket information and password
      *
      * @param userData Contains all user profile personal information
-     * (isComplete() != false)
      * @param password Password for the new user
      * @return True if signUp was successful, false otherwise
      */
@@ -97,15 +95,14 @@ public class SupabaseAuth {
     }
 
     /**
-     * Logins a user using only email from profilePacket and initializing DataManager
-     * if successful. This pulls profile and club data from SB.
+     * Logins a user using only email from profilePacket and password
      *
      * @param profilePacket Profile packet to be popluated containing login
      * email definition
      * @param password User password
      * @return True if login was successful. false if not.
      */
-    public static boolean login(JSONObject userPacket, String password) {
+    public static boolean login(ProfilePacket userPacket, String password) {
         try {
             // Build JSONObject request
             JSONObject requestBody = new JSONObject();
@@ -129,10 +126,6 @@ public class SupabaseAuth {
                 JSONObject jsonResponse = new JSONObject(response.body());
                 authToken = jsonResponse.getString("access_token");
                 userId = UUID.fromString(jsonResponse.getJSONObject("user").getString("id"));
-
-                // Init DataManager with profile_id
-                DataManager.initDataManager(userId);
-
                 return true;    // SUCCESSFUL LOGIN
             } else {
                 System.err.println("Login failed: " + response.body());

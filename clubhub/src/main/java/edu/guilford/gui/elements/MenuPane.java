@@ -15,7 +15,7 @@ public class MenuPane extends Pane {
     // MenuPane attributes
     private MenuPaneController controller;
 
-    public MenuPane() {
+    public MenuPane(String clubName) {
         super();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("menu_pane.fxml"));
         this.setWidth(WIDTH);
@@ -25,6 +25,7 @@ public class MenuPane extends Pane {
             Pane pane = loader.load();
             this.getChildren().add(pane);
             controller = loader.getController();
+            controller.setClubName(clubName);
         } catch (IOException e) {
             e.printStackTrace();
         }

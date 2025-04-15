@@ -15,15 +15,28 @@ import edu.guilford.supabase.SupabaseUpdate;
  */
 public class DataPacket extends JSONObject {
 
+    // Packet table identifier
+    private String table;
+
+    // CONSTRUCTORS
+
     // General non-SB Packet constructor
-    public DataPacket() {
-    }
+    public DataPacket() {}
 
     // General SB Retrieve Packet constructor
     public DataPacket(String table, String search_field, UUID search_key) {
+        this.table = table;
+
         JSONObject jsonObject = SupabaseQuery.queryById(table, search_field, search_key);
         jsonObject.keySet().forEach(key -> this.put(key, jsonObject.get(key)));
     }
+
+    // General SB Retrieve Packet constructor (overload - String)
+    public DataPacket(String table, String search_field, String search_key) {
+        this(table, search_field, UUID.fromString(search_key));
+    }
+
+    // SB METHODS
 
     // Update Packet into table
     public boolean updatePacket(String table, String search_field, UUID search_key) {
@@ -51,16 +64,7 @@ public class DataPacket extends JSONObject {
         return result != null;
     }
 
-    // Upsert Packet into table with onConflict clause
-    public boolean upsertPacket(String table, String onConflict) {
-        // Check if the packet is valid (not null and not empty)
-        if (this == null || this.isEmpty()) {
-            return false; // Invalid packet
-        }
-
-        // Send the packet to the server (implementation depends on your server API)
-        JSONObject result = SupabaseInsert.upsertOne(table, this, onConflict);
-
-        return result != null;
+    public String getTable() {
+        return table;
     }
 }

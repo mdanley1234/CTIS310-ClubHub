@@ -3,7 +3,6 @@ package edu.guilford.gui.controllers;
 import java.io.IOException;
 import java.util.UUID;
 
-import edu.guilford.data.DataManager;
 import edu.guilford.data.packets.BundlePacket;
 import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.gui.GUIManager;
@@ -125,9 +124,6 @@ public class SignupSceneController {
                     UUID directory_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Directory").getString("club_id"));
                     BundlePacket directoryPacket = new BundlePacket(SupabaseAuth.getUserId(), directory_id, "member");
                     directoryPacket.insertPacket("bundles");
-
-                    // Reload DataManager
-                    DataManager.initDataManager(SupabaseAuth.getUserId());
 
                     GUIManager.loadMainScene();
                 } else {
