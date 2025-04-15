@@ -29,8 +29,8 @@ public class MainSceneController {
     @FXML
     private Label studentIDLabel;
 
-    // Set Header Labels
-    public void setHeaderLabels(String school, String studentName, String studentID) {
+    // Set Profile Labels
+    public void setProfileLabels(String school, String studentName, String studentID) {
         schoolLabel.setText("School:  " + school);
         studentNameLabel.setText("Student Name:  " + studentName);
         studentIDLabel.setText("Student ID:  " + studentID);
@@ -55,13 +55,14 @@ public class MainSceneController {
         menuGrid.getChildren().add(pane);
     }
 
-    // // Method to add containers to the menuGrid (VBox)
-    // public void addMenuPane(String menuItemName) {
-    //     // Creating a button as a menu item
-    //     Button menuButton = new Button(menuItemName);
-        
-    //     // Add the button to the VBox
-    //     menuGrid.getChildren().add(menuButton);
-    // }
+    // Clear panes
+    public void clearContentPanes() {
+        mainGrid.getChildren().clear();
+        nextRow = 0;
+        nextCol = 0;
+    }
 
+    public void clearMenuPanes() {
+        menuGrid.getChildren().clear();
+    }
 }

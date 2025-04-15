@@ -50,7 +50,7 @@ public class SupabaseAuth {
     /**
      * Signs up a new user using profilePacket information and password
      *
-     * @param userData Contains all user profile personal information
+     * @param profilePacket Contains all user profile personal information
      * @param password Password for the new user
      * @return True if signUp was successful, false otherwise
      */
@@ -97,16 +97,15 @@ public class SupabaseAuth {
     /**
      * Logins a user using only email from profilePacket and password
      *
-     * @param profilePacket Profile packet to be popluated containing login
-     * email definition
+     * @param profilePacket Profile packet to be popluated containing login email definition
      * @param password User password
      * @return True if login was successful. false if not.
      */
-    public static boolean login(ProfilePacket userPacket, String password) {
+    public static boolean login(ProfilePacket profilePacket, String password) {
         try {
             // Build JSONObject request
             JSONObject requestBody = new JSONObject();
-            requestBody.put("email", userPacket.get("email"));
+            requestBody.put("email", profilePacket.get("email"));
             requestBody.put("password", password);
 
             // Build HttpRequest object

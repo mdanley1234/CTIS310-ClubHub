@@ -7,33 +7,39 @@ import edu.guilford.gui.controllers.MenuPaneController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 
+/**
+ * The {@code MenuPane} is a reusable UI component representing a clickable club menu item.
+ * <p>
+ * It loads the corresponding FXML layout and binds a {@link DataBundle} to the associated
+ * {@link MenuPaneController}.
+ */
 public class MenuPane extends Pane {
 
-    // MenuPane sizes
-    private static final double HEIGHT = 65;
-    private static final double WIDTH = 150;
-
-    // MenuPane attributes
+    /** The controller associated with this menu pane. */
     private MenuPaneController controller;
-    private DataBundle bundle;
 
+    /**
+     * Constructs a new {@code MenuPane} using the provided {@link DataBundle}.
+     * Loads the FXML layout and initializes the UI elements and controller state.
+     *
+     * @param bundle the data bundle representing the club to associate with this menu item
+     */
     public MenuPane(DataBundle bundle) {
         super();
 
-        this.bundle = bundle;
-
         FXMLLoader loader = new FXMLLoader(getClass().getResource("menu_pane.fxml"));
-        this.setWidth(WIDTH);
-        this.setHeight(HEIGHT);
 
         try {
             Pane pane = loader.load();
             this.getChildren().add(pane);
+
             controller = loader.getController();
             controller.setBundle(bundle);
             controller.setClubName(bundle.getClubName());
+
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error: Unable to load menu pane.");
+            System.exit(1);
         }
     }
 }

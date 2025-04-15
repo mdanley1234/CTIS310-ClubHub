@@ -56,7 +56,7 @@ public class GUIManager {
         stage.setScene(signupScene);
     }
 
-    // Build and load main scene
+    // Build and switch to main scene (ENTRY POINT)
     public static void loadMainScene() {
 
         // Check that user is logged in
@@ -65,12 +65,11 @@ public class GUIManager {
             return;
         }
 
-        // DATA PULLS
+        // Pull necessary data from Supabase (Fetch Bundles)
         DataManager.initDataManager(SupabaseAuth.getUserId()); // Initialize the data manager with the user ID
 
-        // MAIN SCENE BUILDING
-
-        mainScene.buildScene(); // Build the main scene
+        // Construct and switch to mainScene
+        mainScene.buildMain(); // Build the main scene
         stage.setScene(mainScene);
     }
 }
