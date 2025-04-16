@@ -31,7 +31,7 @@ public class DataManager {
         dataBundles = new ArrayList<>();
         JSONArray bundleArray = SupabaseQuery.queryMany("bundles", "profile_id=eq." + SupabaseAuth.getUserId(), "bundle_id");
         for (int i = 0; i < bundleArray.length(); i++) {
-            DataBundle dataBundle = new DataBundle(new DataPacket("profiles", "profile_id", bundleArray.getJSONObject(i).getString("bundle_id")));
+            DataBundle dataBundle = new DataBundle(new DataPacket("bundles", "bundle_id", bundleArray.getJSONObject(i).getString("bundle_id")));
             dataBundles.add(dataBundle);
         }
 

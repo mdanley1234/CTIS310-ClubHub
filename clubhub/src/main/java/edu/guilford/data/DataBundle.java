@@ -8,17 +8,16 @@ import edu.guilford.data.packets.DataPacket;
 import edu.guilford.supabase.SupabaseQuery;
 
 /**
- * A ContentBundle contains a list of Data objects that each correspond to a
- * content panel.
+ * A DataBundle contains all the data packets for a specific profile-club bundle
+ * Note: The individual data packets are not stored in this class, but pulled dynamically from SB when requested
  */
 public class DataBundle {
 
     // DataBundle Base Components
     private DataPacket bundlePacket; // Contains information about the bundle
-    private DataPacket clubPacket;  // Contains information about a select club (or Dashboard, or Directory)
+    private DataPacket clubPacket;  // Contains information about a select club
 
-    // Builds a dataBundle object from a bundle_id by fetching a bundlePacket, clubPacket, and userRole
-    // The userRole enum determines which data packets are fetched from the data base
+    // Builds a dataBundle object from a bundlePacket but not the actual data packets
     public DataBundle(DataPacket bundlePacket) {
         // Fetch data packets
         this.bundlePacket = bundlePacket;
@@ -30,19 +29,24 @@ public class DataBundle {
         return clubPacket.getString("club_name");
     }
 
-    // Fetches dataPackets from the SB database based on userRole and store locally. Return true if successful.
+    // Fetches dataPackets from the SB database based on the user's role in the bundlePacket and returns list of packets
     public ArrayList<DataPacket> fetchPackets() {
         
+        // List of data packets to be returned
         ArrayList<DataPacket> dataPackets = new ArrayList<>();
 
-        //SPECIAL CASES
+        // Special non-club bundles
+
+        // Dashboard - Special Bundle 0
         if (getClubName().equals("Dashboard")) {
 
 
 
             return dataPackets;
         }
-        else if (getClubName().equals("Directory")) {
+
+        // Directory - Special Bundle 1
+        if (getClubName().equals("Directory")) {
 
             JSONArray idArray = SupabaseQuery.queryMany("clubs", "", "club_id");
             for (int i = 0; i < idArray.length(); i++) {
@@ -52,18 +56,22 @@ public class DataBundle {
             return dataPackets;
         }
 
-        // Extract usDerRole enum
-
+        // Select data packets based on the user's role in the bundle
+        // NOTE: USE OF CASCADE STATEMENTS
         switch (bundlePacket.getString("role")) {
             case "admin":
                 // Build admin level packets
+
             case "advisor":
                 // Build advisor level packets
+
             case "leadership":
                 // Build leadership level packets
-            case "member":
 
-                // attendance
+            case "member":
+                // Build member level packets
+
+                // attendance table
                 dataPackets.add(fetchPacketByBundle("attendance"));
             
                 break;
@@ -74,6 +82,7 @@ public class DataBundle {
         return dataPackets;
     }
 
+    // Helper method for data pulls where bundle_id is primary key
     private DataPacket fetchPacketByBundle(String table) {
         DataPacket dataPacket = new DataPacket(table, "bundle_id", bundlePacket.getString("bundle_id"));
         return dataPacket;

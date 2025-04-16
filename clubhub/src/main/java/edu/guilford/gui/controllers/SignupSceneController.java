@@ -115,7 +115,7 @@ public class SignupSceneController {
 
                     // Dashboard bundle (Special Bundle - 0)
                     UUID dashboard_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Dashboard").getString("club_id"));
-                    DataPacket dashboardPacket = new DataPacket();
+                    DataPacket dashboardPacket = new DataPacket("clubs");
                     dashboardPacket.put("profile_id", SupabaseAuth.getUserId());
                     dashboardPacket.put("club_id", dashboard_id);
                     dashboardPacket.put("role", "member");
@@ -123,7 +123,7 @@ public class SignupSceneController {
 
                     // Directory bundle (Special Bundle - 1)
                     UUID directory_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Directory").getString("club_id"));
-                    DataPacket directoryPacket = new DataPacket();
+                    DataPacket directoryPacket = new DataPacket("clubs");
                     directoryPacket.put("profile_id", SupabaseAuth.getUserId());
                     directoryPacket.put("club_id", directory_id);
                     directoryPacket.put("role", "member");
