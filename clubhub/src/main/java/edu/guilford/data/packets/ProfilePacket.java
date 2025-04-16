@@ -4,6 +4,10 @@ import java.util.UUID;
 
 import edu.guilford.supabase.SupabaseAuth;
 
+/**
+ * ProfilePacket is a special DataPacket subclass that adds SBAuth methods
+ * Also provides explicit constructors for signup and login
+ */
 public class ProfilePacket extends DataPacket {
 
     // Signup Constructor
@@ -15,6 +19,9 @@ public class ProfilePacket extends DataPacket {
             int graduation_year,
             String phone_number,
             String address) {
+        super("profiles");
+
+        // Required profile information
         this.put("email", email);
         this.put("student_id", student_id);
         this.put("first_name", first_name);
@@ -27,6 +34,7 @@ public class ProfilePacket extends DataPacket {
 
     // Login Constructor
     public ProfilePacket(String email) {
+        super("profiles");
         this.put("email", email);
     }
 

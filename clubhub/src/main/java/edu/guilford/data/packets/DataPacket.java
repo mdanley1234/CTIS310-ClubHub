@@ -4,26 +4,26 @@ import java.util.UUID;
 
 import org.json.JSONObject;
 
+import edu.guilford.supabase.SupabaseDelete;
 import edu.guilford.supabase.SupabaseInsert;
 import edu.guilford.supabase.SupabaseQuery;
 import edu.guilford.supabase.SupabaseUpdate;
 
 /**
- * DataPacket is the base class for all data packets used in the application. It
- * defines the functionality for creating, storing, retrieving, and sending data
- * packets.
+ * DataPacket defines the functionality for creating, storing, retrieving,
+ * and sending data packets between the application and SB.
  */
 public class DataPacket extends JSONObject {
 
     // Packet table identifier
     private String table;
 
-    // CONSTRUCTORS
+    // Constructors (Retrieval)
 
     // General non-SB Packet constructor
-    public DataPacket() {}
+    public DataPacket(String table) { this.table = table; }
 
-    // General SB Retrieve Packet constructor
+    // General SB Retrieve Packet constructor (UUID)
     public DataPacket(String table, String search_field, UUID search_key) {
         this.table = table;
 
@@ -36,9 +36,9 @@ public class DataPacket extends JSONObject {
         this(table, search_field, UUID.fromString(search_key));
     }
 
-    // SB METHODS
+    // Supabase (Alter)
 
-    // Update Packet into table
+    // Update Packet in table
     public boolean updatePacket(String table, String search_field, UUID search_key) {
         // Check if the packet is valid (not null and not empty)
         if (this == null || this.isEmpty()) {
@@ -64,6 +64,31 @@ public class DataPacket extends JSONObject {
         return result != null;
     }
 
+    // Delete Packet from table
+    public boolean deletePacket(String table) {
+        StringBuilder filterBuilder = new StringBuilder();
+
+        this.keySet().forEach(key -> {
+            Object value = this.get(key);
+            if (value instanceof String) {
+            filterBuilder.append(key).append("=eq.").append("'").append(value).append("'").append("&");
+            } else {
+            filterBuilder.append(key).append("=eq.").append(value).append("&");
+            }
+        });
+
+        // Remove the trailing '&' if it exists
+        if (filterBuilder.length() > 0) {
+            filterBuilder.setLength(filterBuilder.length() - 1);
+        }
+
+        // Send the delete request to the server
+        int result = SupabaseDelete.deleteMany(table, filterBuilder.toString());
+
+        return result > 0; // Return true if delete was successful
+    }
+
+    // Getter for table String
     public String getTable() {
         return table;
     }

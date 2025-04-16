@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import org.json.JSONArray;
 
-import edu.guilford.data.packets.BundlePacket;
+import edu.guilford.data.packets.DataPacket;
 import edu.guilford.data.packets.ProfilePacket;
 import edu.guilford.supabase.SupabaseAuth;
 import edu.guilford.supabase.SupabaseQuery;
@@ -31,7 +31,7 @@ public class DataManager {
         dataBundles = new ArrayList<>();
         JSONArray bundleArray = SupabaseQuery.queryMany("bundles", "profile_id=eq." + SupabaseAuth.getUserId(), "bundle_id");
         for (int i = 0; i < bundleArray.length(); i++) {
-            DataBundle dataBundle = new DataBundle(new BundlePacket(UUID.fromString(bundleArray.getJSONObject(i).getString("bundle_id"))));
+            DataBundle dataBundle = new DataBundle(new DataPacket("profiles", "profile_id", bundleArray.getJSONObject(i).getString("bundle_id")));
             dataBundles.add(dataBundle);
         }
 
