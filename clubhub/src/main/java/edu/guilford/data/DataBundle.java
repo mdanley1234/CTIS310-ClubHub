@@ -50,7 +50,11 @@ public class DataBundle {
 
             JSONArray idArray = SupabaseQuery.queryMany("clubs", "", "club_id");
             for (int i = 0; i < idArray.length(); i++) {
-                dataPackets.add(new DataPacket("clubs", "club_id", idArray.getJSONObject(i).getString("club_id")));
+                DataPacket packet = new DataPacket("clubs", "club_id", idArray.getJSONObject(i).getString("club_id"));
+                if (!packet.get("club_name").equals("Dashboard") && !packet.get("club_name").equals("Directory")) {
+                    packet.addMetadata("button"); // Include "button" in metadata for directory to signal a join button
+                    dataPackets.add(packet);
+                }
             }
 
             return dataPackets;

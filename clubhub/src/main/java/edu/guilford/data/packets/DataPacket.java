@@ -1,5 +1,6 @@
 package edu.guilford.data.packets;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.json.JSONObject;
@@ -17,6 +18,9 @@ public class DataPacket extends JSONObject {
 
     // Packet table identifier
     private String table;
+
+    // Packet metadata (Non-SB) {"includeJoinButton", etc.}
+    private ArrayList<String> metadata = new ArrayList<>();
 
     // Constructors (Retrieval)
 
@@ -91,5 +95,14 @@ public class DataPacket extends JSONObject {
     // Getter for table String
     public String getTable() {
         return table;
+    }
+
+    // Metadata methods
+    public void addMetadata(String metadata) {
+        this.metadata.add(metadata);
+    }
+
+    public boolean hasMetadata(String metadata) {
+        return this.metadata.contains(metadata);
     }
 }

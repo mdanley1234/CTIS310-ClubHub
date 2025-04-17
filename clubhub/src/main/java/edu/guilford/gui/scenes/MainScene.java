@@ -35,13 +35,19 @@ public class MainScene extends Scene {
         ProfilePacket profile = DataManager.getProfilePacket();
         controller.setProfileLabels("Early College at Guilford", (String) profile.get("first_name") + " " + (String) profile.get("last_name"), String.valueOf(profile.get("student_id")));
 
-        // Add menu panels
-        for (DataBundle bundle : DataManager.getDataBundles()) {
-            controller.addMenuPane(new MenuPane(bundle));
-        }
+        // Add menu panes
+        refreshMenuPanes();
 
         // Load the first bundle (Dashboard | Special Bundle - 0)
         loadBundle(DataManager.getDataBundles().get(0));
+    }
+
+    // Code to reload menu panes
+    public static void refreshMenuPanes() {
+        controller.clearMenuPanes(); // Clear existing panes
+        for (DataBundle bundle : DataManager.getDataBundles()) {
+            controller.addMenuPane(new MenuPane(bundle));
+        }
     }
 
     // Code to build application scene from bundle

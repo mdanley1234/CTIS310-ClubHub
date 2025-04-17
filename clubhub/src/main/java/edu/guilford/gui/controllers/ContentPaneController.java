@@ -1,6 +1,7 @@
 package edu.guilford.gui.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 
@@ -16,7 +17,7 @@ public class ContentPaneController {
         contentHeader.setText(header);
     }
 
-    public void addContent(Label e) {
+    public void addContent(Node e) {
         contentBox.getChildren().add(e);
     }
 
