@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,13 +13,16 @@
          <children>
             <AnchorPane prefHeight="40.0" prefWidth="500.0">
                <children>
-                  <Label fx:id="contentHeader" layoutX="14.0" layoutY="5.0" text="Content Container Header" AnchorPane.leftAnchor="14.0" AnchorPane.topAnchor="5.0">
+                  <Label fx:id="contentHeader" layoutX="14.0" layoutY="5.0" text="Content Container Header" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0">
                      <font>
                         <Font name="Bodoni MT" size="24.0" />
                      </font>
                   </Label>
                </children>
             </AnchorPane>
-         </children></VBox>
+         </children>
+         <padding>
+            <Insets left="14.0" />
+         </padding></VBox>
    </content>
 </ScrollPane>
