@@ -9,67 +9,84 @@ import edu.guilford.data.packets.DataPacket;
 import edu.guilford.supabase.SupabaseQuery;
 
 /**
- * A DataBundle contains all the data packets for a specific profile-club bundle
- * Note: The individual data packets are not stored in this class, but pulled dynamically from SB when requested
+ * {@code DataBundle} represents a container for all data packets related to
+ * a user's membership in a specific club (or a special area like Dashboard or Directory).
+ * <p>
+ * It fetches necessary data dynamically from the Supabase backend and packages
+ * them into {@link DataPacket}s depending on the role and context.
  */
 public class DataBundle {
 
-    // DataBundle Base Components
-    private DataPacket bundlePacket; // Contains information about the bundle
-    private DataPacket clubPacket;  // Contains information about a select club
+    /** The data packet containing bundle information, such as bundle_id and role */
+    private DataPacket bundlePacket;
 
-    // Builds a dataBundle object from a bundlePacket but not the actual data packets
+    /** The data packet containing information about the associated club */
+    private DataPacket clubPacket;
+
+    /**
+     * Constructs a new {@code DataBundle} from an existing bundle packet.
+     * It automatically fetches the corresponding club packet using the bundle's club_id.
+     *
+     * @param bundlePacket the packet containing metadata about the user's membership
+     */
     public DataBundle(DataPacket bundlePacket) {
-        // Fetch data packets
         this.bundlePacket = bundlePacket;
-        clubPacket = new DataPacket("clubs", "club_id", bundlePacket.getString("club_id"));
+        this.clubPacket = new DataPacket("clubs", "club_id", bundlePacket.getString("club_id"));
     }
 
-    // Get club name of bundle
+    /**
+     * Returns the name of the club associated with this bundle.
+     *
+     * @return the club name
+     */
     public String getClubName() {
         return clubPacket.getString("club_name");
     }
 
-    // Get bundle id of bundle
+    /**
+     * Returns the UUID of this bundle.
+     *
+     * @return the bundle UUID
+     */
     public UUID getBundleId() {
         return UUID.fromString(bundlePacket.getString("bundle_id"));
     }
 
-    // Fetches dataPackets from the SB database based on the user's role in the bundlePacket and returns list of packets
+    /**
+     * Dynamically fetches and returns the relevant data packets from Supabase
+     * based on the club type or user role.
+     *
+     * @return a list of {@link DataPacket} objects for the bundle
+     */
     public ArrayList<DataPacket> fetchPackets() {
-        
-        // List of data packets to be returned
         ArrayList<DataPacket> dataPackets = new ArrayList<>();
 
-        // Special non-club bundles
-
-        // Dashboard - Special Bundle 0
+        // Special case: Dashboard (home page)
         if (getClubName().equals("Dashboard")) {
+            dataPackets.add(DataManager.getProfilePacket());
 
-            dataPackets.add(DataManager.getProfilePacket()); // Add profile packet to the dashboard bundle
-
-            // Dashboard add list of clubs
-            DataPacket clubList = new DataPacket("list"); // Psuedo packet to hold list of clubs
-            for (int i = 0; i < DataManager.getDataBundles().size(); i++) {
-                String clubName = DataManager.getDataBundles().get(i).getClubName();
-                if (!clubName.equals("Dashboard") && !clubName.equals("Directory")) {
-                    clubList.addMetadata(clubName);
+            // Create pseudo-packet to list club names the user belongs to
+            DataPacket clubList = new DataPacket("list");
+            for (DataBundle bundle : DataManager.getDataBundles()) {
+                String name = bundle.getClubName();
+                if (!name.equals("Dashboard") && !name.equals("Directory")) {
+                    clubList.addMetadata(name);
                 }
             }
 
-            dataPackets.add(clubList); // Add list of clubs to the dashboard bundle
-
+            dataPackets.add(clubList);
             return dataPackets;
         }
 
-        // Directory - Special Bundle 1
+        // Special case: Directory (joinable clubs list)
         if (getClubName().equals("Directory")) {
-
             JSONArray idArray = SupabaseQuery.queryMany("clubs", "", "club_id");
+
             for (int i = 0; i < idArray.length(); i++) {
                 DataPacket packet = new DataPacket("clubs", "club_id", idArray.getJSONObject(i).getString("club_id"));
+
                 if (!packet.get("club_name").equals("Dashboard") && !packet.get("club_name").equals("Directory")) {
-                    packet.addMetadata("button"); // Include "button" in metadata for directory to signal a join button
+                    packet.addMetadata("button");
                     dataPackets.add(packet);
                 }
             }
@@ -77,26 +94,21 @@ public class DataBundle {
             return dataPackets;
         }
 
-        // Select data packets based on the user's role in the bundle
-        // NOTE: USE OF CASCADE STATEMENTS
+        // Role-based packet retrieval
         switch (bundlePacket.getString("role")) {
             case "admin":
-                // Build admin level packets
-
+                // Future: Add admin-specific packets
             case "advisor":
-                // Build advisor level packets
-
+                // Future: Add advisor-specific packets
             case "leadership":
-                // Build leadership level packets
-
+                // Future: Add leadership-specific packets
             case "member":
-                // Build member level packets
+                // For now, all roles receive the same base data
 
-                // club table
+                // Add the club info packet
                 dataPackets.add(clubPacket);
-        
 
-                // events table
+                // Add the event info packet for the club
                 DataPacket eventPacket = new DataPacket("events", "sponsor_club", clubPacket.getString("club_id"));
                 dataPackets.add(eventPacket);
 
@@ -108,10 +120,13 @@ public class DataBundle {
         return dataPackets;
     }
 
-    // Helper method for data pulls where bundle_id is primary key
+    /**
+     * Helper method to fetch a single packet based on this bundle's ID and a specified table.
+     *
+     * @param table the Supabase table to query
+     * @return the fetched {@link DataPacket}
+     */
     private DataPacket fetchPacketByBundle(String table) {
-        DataPacket dataPacket = new DataPacket(table, "bundle_id", bundlePacket.getString("bundle_id"));
-        return dataPacket;
+        return new DataPacket(table, "bundle_id", bundlePacket.getString("bundle_id"));
     }
-
 }

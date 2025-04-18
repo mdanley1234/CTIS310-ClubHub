@@ -11,20 +11,28 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 /**
- * The GUI Manager builds all GUI functionality.
+ * The {@code GUIManager} class is responsible for managing and switching between different scenes in the application.
+ * It handles the initialization and display of the login, signup, and main scenes.
  */
 public class GUIManager {
 
-    // Attribute objects
-    private static Stage stage;                // The stage
+    // Attribute objects for the scenes
+    private static Stage stage;                // The main application stage
     private static LoginScene loginScene;      // Login scene
     private static SignupScene signupScene;    // Signup scene
     private static MainScene mainScene;        // Main scene
 
+    /**
+     * Constructs a new {@code GUIManager} and initializes the scenes.
+     *
+     * @param stage the main stage of the application
+     * @param WINDOW_WIDTH the width of the application window
+     * @param WINDOW_HEIGHT the height of the application window
+     */
     public GUIManager(Stage stage, double WINDOW_WIDTH, double WINDOW_HEIGHT) {
         GUIManager.stage = stage;
 
-        // Build 3 application scenes
+        // Initialize the application scenes
         try {
             loginScene = new LoginScene(WINDOW_WIDTH, WINDOW_HEIGHT);
             signupScene = new SignupScene(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -35,42 +43,48 @@ public class GUIManager {
             System.exit(1);
         }
 
-        // Load login scene
+        // Load the login scene initially
         loadLoginScene();
 
-        // Finish setting up GUI stage object
+        // Set up the GUI window title and icon
         stage.setTitle("ClubHub");
         Image icon = new Image(getClass().getResourceAsStream("ClubHubLogo.jpg"));
         stage.getIcons().add(icon);
         stage.show();
     }
 
-    // Static methods to load scenes
+    // Static methods for loading different scenes
 
-    // Switch to login scene
+    /**
+     * Switches the scene to the login screen.
+     */
     public static void loadLoginScene() {
         stage.setScene(loginScene);
     }
 
-    // Switch to signup scene
+    /**
+     * Switches the scene to the signup screen.
+     */
     public static void loadSignupScene() {
         stage.setScene(signupScene);
     }
 
-    // Build and switch to main scene (ENTRY POINT)
+    /**
+     * Builds and switches to the main scene. It ensures that the user is logged in and data is fetched before loading.
+     */
     public static void loadMainScene() {
 
-        // Check that user is logged in
+        // Check if the user is logged in
         if (SupabaseAuth.getUserId() == null) {
             System.err.println("Error: User is not logged in. Cannot load main scene.");
             return;
         }
 
-        // Pull necessary data from Supabase (Fetch Bundles)
+        // Fetch necessary data from Supabase (e.g., user-specific bundles)
         DataManager.initDataManager(SupabaseAuth.getUserId()); // Initialize the data manager with the user ID
 
-        // Construct and switch to mainScene
-        mainScene.buildMain(); // Build the main scene
+        // Build and switch to the main scene
+        mainScene.buildMain(); // Build the main scene with user data
         stage.setScene(mainScene);
     }
 }

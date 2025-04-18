@@ -11,101 +11,142 @@ import edu.guilford.supabase.SupabaseQuery;
 import edu.guilford.supabase.SupabaseUpdate;
 
 /**
- * DataPacket defines the functionality for creating, storing, retrieving,
- * and sending data packets between the application and SB.
+ * The {@code DataPacket} class represents a packet of data associated with a
+ * specific table in a Supabase database. It extends {@link JSONObject}, allowing
+ * dynamic JSON-based data structure manipulation and storage.
+ * <p>
+ * This class provides methods for creating, retrieving, updating, and deleting
+ * packets from Supabase, as well as maintaining auxiliary metadata.
  */
 public class DataPacket extends JSONObject {
 
-    // Packet table identifier
+    /** The name of the associated database table. */
     private String table;
 
-    // Packet metadata (Non-SB) {"includeJoinButton", etc.}
-    private ArrayList<String> metadata = new ArrayList<>();
+    /** Metadata related to this packet that is not stored in the database. */
+    private final ArrayList<String> metadata = new ArrayList<>();
 
-    // Constructors (Retrieval)
-
-    // General non-SB Packet constructor
-    public DataPacket(String table) { this.table = table; }
-
-    // General SB Retrieve Packet constructor (UUID)
-    public DataPacket(String table, String search_field, UUID search_key) {
+    /**
+     * Constructs a new {@code DataPacket} for a specific table.
+     *
+     * @param table the table this packet is associated with
+     */
+    public DataPacket(String table) {
         this.table = table;
+    }
 
-        JSONObject jsonObject = SupabaseQuery.queryById(table, search_field, search_key);
+    /**
+     * Constructs a new {@code DataPacket} by querying Supabase for a specific UUID.
+     *
+     * @param table        the table to query
+     * @param searchField  the field to search by (typically a primary key)
+     * @param searchKey    the UUID value to search for
+     */
+    public DataPacket(String table, String searchField, UUID searchKey) {
+        this.table = table;
+        JSONObject jsonObject = SupabaseQuery.queryById(table, searchField, searchKey);
         jsonObject.keySet().forEach(key -> this.put(key, jsonObject.get(key)));
     }
 
-    // General SB Retrieve Packet constructor (overload - String)
-    public DataPacket(String table, String search_field, String search_key) {
-        this(table, search_field, UUID.fromString(search_key));
+    /**
+     * Overloaded constructor that accepts a string UUID.
+     *
+     * @param table        the table to query
+     * @param searchField  the field to search by
+     * @param searchKey    the string UUID to convert and search
+     */
+    public DataPacket(String table, String searchField, String searchKey) {
+        this(table, searchField, UUID.fromString(searchKey));
     }
 
-    // Supabase (Alter)
-
-    // Update Packet in table
-    public boolean updatePacket(String table, String search_field, UUID search_key) {
-        // Check if the packet is valid (not null and not empty)
-        if (this == null || this.isEmpty()) {
-            return false; // Invalid packet
+    /**
+     * Updates this packet in Supabase using the given key.
+     *
+     * @param table        the table to update
+     * @param searchField  the field to search by
+     * @param searchKey    the UUID value to match
+     * @return {@code true} if update was successful; {@code false} otherwise
+     */
+    public boolean updatePacket(String table, String searchField, UUID searchKey) {
+        if (this.isEmpty()) {
+            return false;
         }
-
-        // Send the packet to the server (implementation depends on your server API)
-        JSONObject result = SupabaseUpdate.updateById(table, search_field, search_key, this);
-
+        JSONObject result = SupabaseUpdate.updateById(table, searchField, searchKey, this);
         return result != null;
     }
-    
-    // Insert Packet into table
+
+    /**
+     * Inserts this packet into the specified table.
+     *
+     * @param table the table to insert into
+     * @return {@code true} if insert was successful; {@code false} otherwise
+     */
     public boolean insertPacket(String table) {
-        // Check if the packet is valid (not null and not empty)
-        if (this == null || this.isEmpty()) {
-            return false; // Invalid packet
+        if (this.isEmpty()) {
+            return false;
         }
-
-        // Send the packet to the server (implementation depends on your server API)
         JSONObject result = SupabaseInsert.insertOne(table, this);
-
         return result != null;
     }
 
-    // Delete Packet from table
+    /**
+     * Deletes this packet from the specified table using its key-value structure as filters.
+     *
+     * @param table the table to delete from
+     * @return {@code true} if deletion was successful; {@code false} otherwise
+     */
     public boolean deletePacket(String table) {
         StringBuilder filterBuilder = new StringBuilder();
-
         this.keySet().forEach(key -> {
             Object value = this.get(key);
             if (value instanceof String) {
-            filterBuilder.append(key).append("=eq.").append("'").append(value).append("'").append("&");
+                filterBuilder.append(key).append("=eq.'").append(value).append("'&");
             } else {
-            filterBuilder.append(key).append("=eq.").append(value).append("&");
+                filterBuilder.append(key).append("=eq.").append(value).append("&");
             }
         });
 
-        // Remove the trailing '&' if it exists
         if (filterBuilder.length() > 0) {
             filterBuilder.setLength(filterBuilder.length() - 1);
         }
 
-        // Send the delete request to the server
         int result = SupabaseDelete.deleteMany(table, filterBuilder.toString());
-
-        return result > 0; // Return true if delete was successful
+        return result > 0;
     }
 
-    // Getter for table String
+    /**
+     * Gets the table name this packet is associated with.
+     *
+     * @return the table name
+     */
     public String getTable() {
         return table;
     }
 
-    // Metadata methods
+    /**
+     * Adds a piece of metadata to this packet (not stored in Supabase).
+     *
+     * @param metadata the metadata tag to add
+     */
     public void addMetadata(String metadata) {
         this.metadata.add(metadata);
     }
 
+    /**
+     * Checks whether this packet contains a specific metadata tag.
+     *
+     * @param metadata the tag to search for
+     * @return {@code true} if present; {@code false} otherwise
+     */
     public boolean hasMetadata(String metadata) {
         return this.metadata.contains(metadata);
     }
 
+    /**
+     * Returns all metadata associated with this packet.
+     *
+     * @return a list of metadata tags
+     */
     public ArrayList<String> getMetadata() {
         return metadata;
     }

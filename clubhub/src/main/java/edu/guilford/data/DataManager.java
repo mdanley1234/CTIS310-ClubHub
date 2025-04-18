@@ -34,7 +34,6 @@ public class DataManager {
             DataBundle dataBundle = new DataBundle(new DataPacket("bundles", "bundle_id", bundleArray.getJSONObject(i).getString("bundle_id")));
             dataBundles.add(dataBundle);
         }
-
     }
 
     // Data Getters

@@ -114,21 +114,22 @@ public class SignupSceneController {
                     // SUCCESSFUL SIGNUP AND LOGIN (Generate Special REQUIRED Bundles)
 
                     // Dashboard bundle (Special Bundle - 0)
-                    UUID dashboard_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Dashboard").getString("club_id"));
+                    UUID dashboardId = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Dashboard").getString("club_id"));
                     DataPacket dashboardPacket = new DataPacket("bundles");
                     dashboardPacket.put("profile_id", SupabaseAuth.getUserId());
-                    dashboardPacket.put("club_id", dashboard_id);
+                    dashboardPacket.put("club_id", dashboardId);
                     dashboardPacket.put("role", "member");
                     dashboardPacket.insertPacket("bundles");
 
                     // Directory bundle (Special Bundle - 1)
-                    UUID directory_id = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Directory").getString("club_id"));
+                    UUID directoryId = UUID.fromString(SupabaseQuery.queryById("clubs", "club_name", "Directory").getString("club_id"));
                     DataPacket directoryPacket = new DataPacket("bundles");
                     directoryPacket.put("profile_id", SupabaseAuth.getUserId());
-                    directoryPacket.put("club_id", directory_id);
+                    directoryPacket.put("club_id", directoryId);
                     directoryPacket.put("role", "member");
                     directoryPacket.insertPacket("bundles");
 
+                    // Load main scene
                     GUIManager.loadMainScene();
                 } else {
                     // UNSUCCESSFUL LOGIN

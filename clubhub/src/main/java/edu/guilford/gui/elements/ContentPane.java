@@ -50,6 +50,7 @@ public class ContentPane extends Pane {
 
             String labelStyle = "-fx-font-size: 16px; -fx-font-family: 'Segoe UI', sans-serif;";
             String labelStyle2 = "-fx-font-size: 20px; -fx-font-family: 'Segoe UI', sans-serif; -fx-font-weight: bold;";
+
             // Display content based on packet type
             switch (packet.getTable()) {
                 case "clubs":
@@ -200,7 +201,7 @@ public class ContentPane extends Pane {
                     });
                     break;
                 case "list":
-                    controller.setHeader("List of Clubs");
+                    controller.setHeader("List of Your Clubs");
                     for (String data : packet.getMetadata()) {
                         controller.addContent(new Label(data) {
                             {
@@ -230,7 +231,6 @@ public class ContentPane extends Pane {
                         }
                     });
                     break;
-
             }
         } catch (IOException e) {
             System.err.println("Error: Unable to load content pane FXML.");
@@ -238,8 +238,12 @@ public class ContentPane extends Pane {
         }
     }
 
-    // Helper methods
-    // Check if a bundle already exists for a club (Checks if the user is a member)
+    /**
+     * Helper method to check if a bundle already exists for a club.
+     * 
+     * @param packet The data packet containing club information.
+     * @return The associated DataBundle if it exists, otherwise null.
+     */
     private DataBundle getBundle(DataPacket packet) {
         for (DataBundle dataBundle : DataManager.getDataBundles()) {
             if (dataBundle.getClubName().equals(packet.get("club_name"))) {

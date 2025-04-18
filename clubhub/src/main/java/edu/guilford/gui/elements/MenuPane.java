@@ -30,14 +30,17 @@ public class MenuPane extends Pane {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("menu_pane.fxml"));
 
         try {
+            // Load the FXML layout and add it to the pane
             Pane pane = loader.load();
             this.getChildren().add(pane);
 
+            // Initialize the controller and set the bundle
             controller = loader.getController();
             controller.setBundle(bundle);
             controller.setClubName(bundle.getClubName());
 
         } catch (IOException e) {
+            // Error handling if the FXML layout fails to load
             System.err.println("Error: Unable to load menu pane.");
             System.exit(1);
         }

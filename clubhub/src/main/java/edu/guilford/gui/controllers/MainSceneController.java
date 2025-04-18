@@ -7,43 +7,61 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
-// Main view controller
+/**
+ * Controller for the main application scene.
+ * <p>
+ * Manages the layout of content and menu panes, as well as displaying profile information.
+ */
 public class MainSceneController {
 
-    // mainGrid contains ContentPane objects
+    /** GridPane containing the primary content containers (ContentPane). */
     @FXML
     private GridPane mainGrid;
 
-    // menuGrid contains MenuPane objects
+    /** VBox containing the vertical menu items (MenuPane). */
     @FXML
     private VBox menuGrid;
 
-    // Profile Information
-
+    /** Label displaying the user's school. */
     @FXML
     private Label schoolLabel;
 
+    /** Label displaying the user's full name. */
     @FXML
     private Label studentNameLabel;
 
+    /** Label displaying the user's student ID. */
     @FXML
     private Label studentIDLabel;
 
-    // Set Profile Labels
+    /** Internal counter to track the next column for content pane insertion. */
+    private int nextCol = 0;
+
+    /** Internal counter to track the next row for content pane insertion. */
+    private int nextRow = 0;
+
+    /**
+     * Updates the profile label section with user-specific details.
+     *
+     * @param school      the school name
+     * @param studentName the student's full name
+     * @param studentID   the student's ID number
+     */
     public void setProfileLabels(String school, String studentName, String studentID) {
         schoolLabel.setText("School:  " + school);
         studentNameLabel.setText("Student Name:  " + studentName);
         studentIDLabel.setText("Student ID:  " + studentID);
     }
 
-    // Method to add containers to the mainGrid (GridPane) automatically at the next location
-    private int nextRow = 0;
-    private int nextCol = 0;
-
+    /**
+     * Adds a new content pane to the next available location in the main grid.
+     * Automatically wraps to a new row when the column limit is reached.
+     *
+     * @param pane the content pane to add
+     */
     public void addContentPane(ContentPane pane) {
         mainGrid.add(pane, nextCol, nextRow);
 
-        // Update the next location (move to the next column, or next row if at the end of a row)
         nextCol++;
         if (nextCol >= mainGrid.getColumnCount()) {
             nextCol = 0;
@@ -51,17 +69,27 @@ public class MainSceneController {
         }
     }
 
+    /**
+     * Adds a new menu pane to the vertical menu grid.
+     *
+     * @param pane the menu pane to add
+     */
     public void addMenuPane(MenuPane pane) {
         menuGrid.getChildren().add(pane);
     }
 
-    // Clear panes
+    /**
+     * Clears all content panes from the main grid and resets position counters.
+     */
     public void clearContentPanes() {
         mainGrid.getChildren().clear();
         nextRow = 0;
         nextCol = 0;
     }
 
+    /**
+     * Clears all menu panes from the vertical menu grid.
+     */
     public void clearMenuPanes() {
         menuGrid.getChildren().clear();
     }
