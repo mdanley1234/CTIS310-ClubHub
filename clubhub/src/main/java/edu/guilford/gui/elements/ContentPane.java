@@ -49,6 +49,7 @@ public class ContentPane extends Pane {
             this.getChildren().add(pane);
 
             String labelStyle = "-fx-font-size: 16px; -fx-font-family: 'Segoe UI', sans-serif;";
+            String labelStyle2 = "-fx-font-size: 20px; -fx-font-family: 'Segoe UI', sans-serif; -fx-font-weight: bold;";
             // Display content based on packet type
             switch (packet.getTable()) {
                 case "clubs":
@@ -153,9 +154,8 @@ public class ContentPane extends Pane {
                     controller.addContent(buttonBox);
                     break;
                 case "profiles":
-                this.setHeight(MEDIUM);
+                    this.setHeight(MEDIUM);
                     controller.setHeader("User Profile Information");
-
 
                     controller.addContent(new Label("Name: " + packet.get("first_name") + " " + packet.get("last_name")) {
                         {
@@ -196,6 +196,37 @@ public class ContentPane extends Pane {
                     controller.addContent(new Label("Graduation Year: " + packet.get("graduation_year")) {
                         {
                             setStyle(labelStyle);
+                        }
+                    });
+                    break;
+                case "list":
+                    controller.setHeader("List of Clubs");
+                    for (String data : packet.getMetadata()) {
+                        controller.addContent(new Label(data) {
+                            {
+                                setStyle(labelStyle2);
+                            }
+                        });
+                    }
+                    break;
+
+                case "events":
+                    this.setHeight(MEDIUM);
+                    controller.setHeader("Club Event Information");
+
+                    controller.addContent(new Label("Event Name: " + packet.get("title")) {
+                        {
+                            setStyle(labelStyle2);
+                        }
+                    });
+                    controller.addContent(new Label("Event Date/Time: " + packet.get("date_time")) {
+                        {
+                            setStyle(labelStyle2);
+                        }
+                    });
+                    controller.addContent(new Label("Event Location: " + packet.get("location")) {
+                        {
+                            setStyle(labelStyle2);
                         }
                     });
                     break;

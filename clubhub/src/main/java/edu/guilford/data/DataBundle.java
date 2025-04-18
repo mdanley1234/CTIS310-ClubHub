@@ -48,6 +48,17 @@ public class DataBundle {
 
             dataPackets.add(DataManager.getProfilePacket()); // Add profile packet to the dashboard bundle
 
+            // Dashboard add list of clubs
+            DataPacket clubList = new DataPacket("list"); // Psuedo packet to hold list of clubs
+            for (int i = 0; i < DataManager.getDataBundles().size(); i++) {
+                String clubName = DataManager.getDataBundles().get(i).getClubName();
+                if (!clubName.equals("Dashboard") && !clubName.equals("Directory")) {
+                    clubList.addMetadata(clubName);
+                }
+            }
+
+            dataPackets.add(clubList); // Add list of clubs to the dashboard bundle
+
             return dataPackets;
         }
 
@@ -81,12 +92,14 @@ public class DataBundle {
             case "member":
                 // Build member level packets
 
-                // attendance table
-                // dataPackets.add(fetchPacketByBundle("attendance"));
-
                 // club table
                 dataPackets.add(clubPacket);
-            
+        
+
+                // events table
+                DataPacket eventPacket = new DataPacket("events", "sponsor_club", clubPacket.getString("club_id"));
+                dataPackets.add(eventPacket);
+
                 break;
             default:
                 throw new IllegalArgumentException("Invalid role: " + bundlePacket.getString("role"));

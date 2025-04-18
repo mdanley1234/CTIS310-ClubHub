@@ -105,4 +105,8 @@ public class DataPacket extends JSONObject {
     public boolean hasMetadata(String metadata) {
         return this.metadata.contains(metadata);
     }
+
+    public ArrayList<String> getMetadata() {
+        return metadata;
+    }
 }
