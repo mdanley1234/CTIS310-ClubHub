@@ -31,6 +31,7 @@ public class GUIManager {
             mainScene = new MainScene(WINDOW_WIDTH, WINDOW_HEIGHT);
         } catch (IOException e) {
             System.err.println("Error: Unable to create one of the application screens.");
+            e.printStackTrace();
             System.exit(1);
         }
 

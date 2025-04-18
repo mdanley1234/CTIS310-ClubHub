@@ -1,6 +1,7 @@
 package edu.guilford.data;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.json.JSONArray;
 
@@ -27,6 +28,11 @@ public class DataBundle {
     // Get club name of bundle
     public String getClubName() {
         return clubPacket.getString("club_name");
+    }
+
+    // Get bundle id of bundle
+    public UUID getBundleId() {
+        return UUID.fromString(bundlePacket.getString("bundle_id"));
     }
 
     // Fetches dataPackets from the SB database based on the user's role in the bundlePacket and returns list of packets

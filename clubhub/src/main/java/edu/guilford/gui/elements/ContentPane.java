@@ -9,6 +9,7 @@ import edu.guilford.data.packets.DataPacket;
 import edu.guilford.gui.controllers.ContentPaneController;
 import edu.guilford.gui.scenes.MainScene;
 import edu.guilford.supabase.SupabaseAuth;
+import edu.guilford.supabase.SupabaseDelete;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -116,7 +117,7 @@ public class ContentPane extends Pane {
                         joinButton.setOnAction(event -> {
                             System.out.println("Join Club button clicked!");
 
-                            if (!isMember(packet)) {
+                            if (getBundle(packet) == null) {
                                 DataPacket bundlePacket = new DataPacket("bundles");
                                 bundlePacket.put("profile_id", SupabaseAuth.getUserId());
                                 bundlePacket.put("club_id", UUID.fromString(packet.getString("club_id")));
@@ -132,12 +133,9 @@ public class ContentPane extends Pane {
                         leaveButton.setOnAction(event -> {
                             System.out.println("Leave Club button clicked!");
 
-                            if (isMember(packet)) {
-                                DataPacket bundlePacket = new DataPacket("bundles");
-                                bundlePacket.put("profile_id", SupabaseAuth.getUserId());
-                                bundlePacket.put("club_id", UUID.fromString(packet.getString("club_id")));
-                                bundlePacket.put("role", "member");
-                                bundlePacket.deletePacket("bundles");
+                            DataBundle bundle = getBundle(packet);
+                            if (bundle != null) {
+                                SupabaseDelete.deleteById("bundles", "bundle_id", bundle.getBundleId());
 
                                 DataManager.initDataManager(SupabaseAuth.getUserId()); // Refresh data manager to include new bundle
                                 MainScene.refreshMenuPanes(); // Refresh menu panes to include new bundle
@@ -161,12 +159,12 @@ public class ContentPane extends Pane {
 
     // Helper methods
     // Check if a bundle already exists for a club (Checks if the user is a member)
-    private boolean isMember(DataPacket packet) {
+    private DataBundle getBundle(DataPacket packet) {
         for (DataBundle dataBundle : DataManager.getDataBundles()) {
             if (dataBundle.getClubName().equals(packet.get("club_name"))) {
-                return true; // User is a member of the club
+                return dataBundle; // User is a member of the club
             }
         }
-        return false; // User is not a member of the club
+        return null; // User is not a member of the club
     }
 }
