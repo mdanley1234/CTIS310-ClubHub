@@ -3,6 +3,7 @@ package edu.guilford.gui.controllers;
 import edu.guilford.data.DataBundle;
 import edu.guilford.gui.scenes.MainScene;
 import javafx.fxml.FXML;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 /**
@@ -20,6 +21,9 @@ public class MenuPaneController {
     @FXML
     private Text clubLabel;
 
+    @FXML
+    private StackPane backPanel; 
+
     /**
      * Sets the club name in the menu pane UI.
      *
@@ -27,6 +31,13 @@ public class MenuPaneController {
      */
     public void setClubName(String clubName) {
         clubLabel.setText(clubName);
+
+        // Special methods for special bundles (Dashboard | Special Bundle - 0) (Directory | Special Bundle - 1)
+        if ("Dashboard".equals(clubName)) {
+            backPanel.setStyle("-fx-background-color: orange; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: black; -fx-border-width: 2;");
+        } else if ("Directory".equals(clubName)) {
+            backPanel.setStyle("-fx-background-color: blue; -fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: black; -fx-border-width: 2;");
+        } 
     }
 
     /**

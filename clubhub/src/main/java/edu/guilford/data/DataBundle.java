@@ -46,7 +46,7 @@ public class DataBundle {
         // Dashboard - Special Bundle 0
         if (getClubName().equals("Dashboard")) {
 
-
+            dataPackets.add(DataManager.getProfilePacket()); // Add profile packet to the dashboard bundle
 
             return dataPackets;
         }
@@ -82,7 +82,10 @@ public class DataBundle {
                 // Build member level packets
 
                 // attendance table
-                dataPackets.add(fetchPacketByBundle("attendance"));
+                // dataPackets.add(fetchPacketByBundle("attendance"));
+
+                // club table
+                dataPackets.add(clubPacket);
             
                 break;
             default:

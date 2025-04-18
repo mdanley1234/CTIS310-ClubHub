@@ -26,7 +26,7 @@ public class ContentPane extends Pane {
 
     // Predefined pane height options
     public static final double SMALL = 200;
-    public static final double MEDIUM = 280;
+    public static final double MEDIUM = 300;
     public static final double LARGE = 350;
     public static final double XLARGE = 450;
 
@@ -48,13 +48,13 @@ public class ContentPane extends Pane {
             controller = loader.getController();
             this.getChildren().add(pane);
 
+            String labelStyle = "-fx-font-size: 16px; -fx-font-family: 'Segoe UI', sans-serif;";
             // Display content based on packet type
             switch (packet.getTable()) {
                 case "clubs":
+                    HBox buttonBox = new HBox(10); // spacing of 10 between buttons
                     this.setHeight(LARGE);
                     controller.setHeader(packet.get("club_name").toString());
-
-                    String labelStyle = "-fx-font-size: 16px; -fx-font-family: 'Segoe UI', sans-serif;";
 
                     controller.addContent(new Label("Founded: " + packet.get("founding_year")) {
                         {
@@ -103,16 +103,6 @@ public class ContentPane extends Pane {
                                 + "-fx-padding: 8 16;"
                         );
 
-                        Button leaveButton = new Button("Leave Club");
-                        leaveButton.setStyle(
-                                "-fx-font-size: 14px; "
-                                + "-fx-font-family: 'Segoe UI', sans-serif; "
-                                + "-fx-background-color: #f44336; "
-                                + "-fx-text-fill: white; "
-                                + "-fx-background-radius: 5px; "
-                                + "-fx-padding: 8 16;"
-                        );
-
                         // Add button functionality
                         joinButton.setOnAction(event -> {
                             System.out.println("Join Club button clicked!");
@@ -126,28 +116,88 @@ public class ContentPane extends Pane {
 
                                 DataManager.initDataManager(SupabaseAuth.getUserId()); // Refresh data manager to include new bundle
                                 MainScene.refreshMenuPanes(); // Refresh menu panes to include new bundle
+                                MainScene.loadBundle(DataManager.getDataBundles().getLast()); // Load the new bundle (Club | Member)
                             }
 
                         });
 
-                        leaveButton.setOnAction(event -> {
-                            System.out.println("Leave Club button clicked!");
-
-                            DataBundle bundle = getBundle(packet);
-                            if (bundle != null) {
-                                SupabaseDelete.deleteById("bundles", "bundle_id", bundle.getBundleId());
-
-                                DataManager.initDataManager(SupabaseAuth.getUserId()); // Refresh data manager to include new bundle
-                                MainScene.refreshMenuPanes(); // Refresh menu panes to include new bundle
-                            }
-
-                        });
-
-                        HBox buttonBox = new HBox(10); // spacing of 10 between buttons
-                        buttonBox.getChildren().addAll(joinButton, leaveButton);
-                        controller.addContent(buttonBox);
+                        buttonBox.getChildren().addAll(joinButton);
                     }
 
+                    // Default remover button included
+                    Button leaveButton = new Button("Leave Club");
+                    leaveButton.setStyle(
+                            "-fx-font-size: 14px; "
+                            + "-fx-font-family: 'Segoe UI', sans-serif; "
+                            + "-fx-background-color: #f44336; "
+                            + "-fx-text-fill: white; "
+                            + "-fx-background-radius: 5px; "
+                            + "-fx-padding: 8 16;"
+                    );
+
+                    leaveButton.setOnAction(event -> {
+                        System.out.println("Leave Club button clicked!");
+
+                        DataBundle bundle = getBundle(packet);
+                        if (bundle != null) {
+                            SupabaseDelete.deleteById("bundles", "bundle_id", bundle.getBundleId());
+
+                            DataManager.initDataManager(SupabaseAuth.getUserId()); // Refresh data manager to include new bundle
+                            MainScene.refreshMenuPanes(); // Refresh menu panes to include new bundle
+                            MainScene.loadBundle(DataManager.getDataBundles().get(1)); // Load the first bundle (Directory | Special Bundle - 1)
+                        }
+
+                    });
+
+                    buttonBox.getChildren().addAll(leaveButton);
+                    controller.addContent(buttonBox);
+                    break;
+                case "profiles":
+                this.setHeight(MEDIUM);
+                    controller.setHeader("User Profile Information");
+
+
+                    controller.addContent(new Label("Name: " + packet.get("first_name") + " " + packet.get("last_name")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
+
+                    controller.addContent(new Label("Email: " + packet.get("email")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
+
+                    controller.addContent(new Label("Student ID: " + packet.get("student_id")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
+
+                    controller.addContent(new Label("Date of Birth: " + packet.get("date_of_birth")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
+
+                    controller.addContent(new Label("Phone Number: " + packet.get("phone_number")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
+
+                    controller.addContent(new Label("Address: " + packet.get("address")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
+
+                    controller.addContent(new Label("Graduation Year: " + packet.get("graduation_year")) {
+                        {
+                            setStyle(labelStyle);
+                        }
+                    });
                     break;
 
             }
